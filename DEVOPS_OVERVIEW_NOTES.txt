@@ -1,0 +1,89 @@
+Why DEVOPS?
+
+- Shorter development lifecycle and faster innovation
+- Improved communication and collabration
+- Increased efficiencies
+- Reduces cost and IT head count or staff
+***************************************************
+
+Typical Phases of SDLC:
+
+-Requirement
+- Analysis
+- Design
+-Development
+- Testing
+- Deployment /Monitoring
+
+______________________________________________________
+
+WaterFall Model:
+
+It is a project model based on sequential design process.
+
+Challenges:
+- High ammount of risks and uncertainity
+- Nor good model for complex projects
+- poor model for long and ongoing projects
+- cannot accomudate chnaging requirments
+- Adjusting scope during the lifecyle is not possible
+- Integration of all pahses is done at the end
+___________________________________________________________
+
+AGILE:
+It is a methodology to build softwares incremently using short iterations of 1 to 4 weeks.
+
+Challenges:
+
+- No involvement of Operations team
+- No process of automation to maintain production environment
+- Or no tools to automate infrastructure of servers
+- if number of servers are increated or have to be increased in an enviromment, no means to automate the process of scaling them and managing them
+- Difficult to diagnose and provide report and feedback about the application or product
+
+In agile we concentrate more of development and testing activites and feedback from client
+
+_________________________________________________________________
+
+DEVOPS
+
+To overcome these challages in AGILE, the concept of DEVOPS is introduced.
+
+
+The union of devTeam and operations team is the core of DEVOPS approach.
+DevOps is the process which involves:
+- Automation of infrastructure
+- Automating all the workflows
+- Continously measuring the application performance.
+
+Here we have continous Development, Continous testing, Continous Integration. Conitnous deployment and Continous monitoring.
+
+DEVOPS LIFECYLE involves:
+
+Plan , CODE, build, Test , INTEGRATE , DEPLOY, OPERATE, MONITOR
+
+PRINCIPLES OF DEVOPS
+
+- Continous Integration
+
+- Continous Delivery/Deployment
+
+- Continous Testing
+
+- Continous Monitoring
+
+- Continous Assesment
+
+
+
+
+
+
+
+
+
+
+
+
+
+

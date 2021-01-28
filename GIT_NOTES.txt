@@ -1,0 +1,519 @@
+What is the solution when :
+
+- A developer has to manage or track changes to the code.
+- When multiple developers have to work simutenously and contribute to final code
+- When we have to track who or when changes were made.
+- When we have to manage all the older versions of the code.
+
+The Solution is: SOURCE CODE MANAGEMENT SYSTEM or VERSION CONTROL SYSTEM
+
+What is a Version Control System:
+_____________________________________________
+
+- A system that documents changes made to a file or set of files.
+- manages multiple revisions to files
+- manages files from multiple users.
+"It is snapshot of your project overtime"
+
+Types of Version Control System:
+______________________________________________
+
+1. Local Version Control
+- One to One interation between developer and the local Version System.
+Challenge:
+This system doesnot support managing of data when multiple developers are working parallely on a project
+Eg: RCS
+
+2. Centralized Version Control System
+- In this system multiple developers are working together and can move and track there chnages on to a Central repository.
+
+eg: CVS,subversion, perforce, TFS(team foundation Version Control) etc
+
+3. Distributed Version Control System
+
+This system is Distributed in nature where in all the developers will have a working Directory, local repository and a Central repository
+
+eg: GIT, Mercurial, BITKeeper, Darcas, Bazzar etc.
+
+____________________________________________________________
+
+What is GIT?
+
+- its open source and is developed by Linus Torvalds.
+- Distributed version Control System
+- Tool that tracks changes in your code/files over time.
+- Working Directory, Stagging area, local repository and remote repository
+- GIT stores the data in sanpshots that is the reson that its performance is very fast and it can store huge amount of data.
+
+What is GIT hub?
+
+- GitHub is the website where we host all of our git repositories.
+***************************************
+Connect to Ssh client
+
+# ssh -i "pemkey" ussername@public ip adress
+# ssh -i "dockertoday.pem" ec2-user@publicipaddress
+
+
+GIT COMMANDS:
+_____________________________________________________________
+
+Install GIT:
+
+# sudo su -
+# yum install git
+# git --version
+
+*************************
+Scenario1: Create a Working Directory
+
+# mkdir gitDemo
+# cd gitDemo
+# mkdir project
+# cd project
+- Working directory is ready
+
+Initiating a Local repository in working directory
+
+# git init
+# ll -al
+
+Local repository intiated in project working directory. Now all files in working directory will be tracked by git.
+
+***********************************************
+Scenario 2: Creating a new file and adding it to local repository
+
+# vim file1
+# git status  // file is not tracked by git
+# git add file1
+# git status   // file is in stagging area and not commited yet
+# git commit -m "commit file1"
+# ls
+# git ls-files   // file is now being tracked by GIT
+
+Again one more example:
+
+# vim file2
+# git status  // file is not tracked by git
+# git add file2
+# git status   // file is in stagging area and not commited yet
+# git commit -m "commit file2"
+# ls
+# git ls-files   // file is now being tracked by GIT
+
+****************************************************
+Scanrio 3: Check commit history or log
+
+# git log  // will show the commit history in detail
+# git log --oneline 
+# git show commitid   // will show chnages happened in this commit
+*****************************************************
+Scenario4: COMMIT and ADD an Existing file
+
+# vim file2   // open exisiting file and make chnages to it
+# git status   // file is being tracked only chnages have to be commited
+# git commit -a -m "modified file2"
+
+*******************************************************
+Scenario 5: Checking Unstagged chnages and stagged changes 
+
+# vim file2   // open exisiting file and make chnages to it
+# git diff file2   // will show chnages that are made to file2 when it is not stagged yet
+# git add file2  // stage the file
+# git diff --staged file2 // will show chnages that are made to file2 when file is in stagging area
+# git commit -m "new chnages"
+
+********************************************************
+Scenario6: Deletion of file
+
+- Deletion of file from WD & local repo
+
+# git rm file1
+# git status
+# git commit -m "deletion of file1"
+# ls
+# git ls-files
+
+- Deletion of file local repo only
+
+# git rm --cached file2
+# git commit -m "deteled file from local"
+# git status    // file will be untracked
+# ls
+# git ls-files
+
+# add the untracked file to local repo
+
+***********************************************************
+
+Scenario7: Ignoring Files
+
+# vim log
+# git status  // file untracked
+# vim .gitignore   // add name of file "log" , which wil be noe ignored
+# git status   // log will be ignored and .gitignore untracked
+# git add .gitignore
+# git commit -m "added ignore file"
+# git status // working tress has to be clean
+
+************************************************************
+
+Scenario 8: Reverting the changes:
+
+# vim file3  // create a new files
+# git add file3
+# git commit -m "added file3"
+
+//Delete the file
+
+# git rm file3
+# git commit -m "deleted file3"
+# ls
+# git ls-files
+
+# git log --oneline    // last commit id is of delete action, copy it
+// lets revert the commit
+
+# git revert commit id
+
+// file back to WD and local
+# ls
+# git ls-files
+
+***************************************************************
+Scenario 9: Resetting the commits OR Removing Certain changes
+
+# git log --oneline    
+
+# git reset --hard commitid    // permanently removes, changes cannot be reverted back.
+
+*******************************************************************
+
+Branching
+
+# git status ==> shows master branch
+# git branch b1     // copies all files form master
+# git status
+# git checkout b1
+# git status  
+ // On branch b1
+
+# git ls-files // all files same as master on b1
+# git log --oneline // all commit same as master 
+
+Create a file on branch b1
+
+# vim file4 
+# git add file4
+# git commit -m "added file4"
+# git ls-files
+# git log --oneline   // 1 new commit which is not on master right now
+
+
+Merging a file from branch b1 to master
+
+# git checkout master
+# git ls-files
+# git merge b1 master  // merge from source b1 to destination master
+# git ls-files
+# git log --oneline
+
+Resolve Conflicts on Merge
+
+// create a file on Master
+
+# git branch  // should be on Master branch
+
+# git login   // new file , add text
+# git add login
+# git commit -m "login file"
+
+# git checkout b1
+
+# git login   // new file , add text ==> filename same but text is different
+# git add login
+# git commit -m "login file"
+
+Merge b1 to master
+
+# git checkout master
+
+# git merge b1 master
+
+// Conflict error message
+// manually edit login file and add changes wherever required.
+# vim login   // save it
+# git add login
+# git commit -m "conflict resolve"
+
+File on b1 can also be merged if required
+
+# git checkout b1
+# git merge master b1
+# git chckout master
+
+********************************************************
+STASHING of files on GIT
+
+# git status ==> * indicates we are on master branch
+# vim login.txt ==> inster new code for signout button ==>esc ==> :wq!
+
+New feature development activity on branch 1
+
+# git status ==> chnages that are untracked and we don’t want to commit them right now.
+
+So stash them on temporary space:
+
+# git stash   ==> all the untracked changes will be moved to temperory space
+
+Where is this temporary space?
+
+# git stash list   ==> will give list of chnages stashed 
+
+
+# git show stashnumber  ==> give stash number
+
+Now developer can work on new feature by switching to branch b1
+
+# git checkout b1
+# vim logout.txt
+==> add code for logout ==>esc ==> :wq!
+#git add logout.txt
+# git commit -m “logoutcode”
+
+Now switch back to master brach
+
+# git checkout master
+
+GET changes back from stash ===> UNSTASHING
+
+# git stash pop stash@{0}   ==> will revert back all untracked file chnages
+After unstashing, the files will be dropped from temperory shelves. 
+
+  OR
+# git stash apply statsh@{0}   ==> will revert back chnages from temperory shelves to working directory
+// and files still remains on temperory shelves if needed latter in other branches.
+
+# git statsh list ==> nothing will be there  on executing stash pop.
+
+PARTIAL STASH 
+
+# git stash -p  ==> give y for which ever file we want to stash
+
+==> give N if we don’t want to stash
+
+# git stash drop stash@{0} 
+
+# git stash list
+
+# git stash clear  ==> no stash will be there
+************************************************************************************
+REBASE:
+
+# git log --oneline  ==> see how many commits are there and reset commits to only last 2 commits
+
+# git reset --hard commitid ( give last second commit id)
+# git log --oneline ==> 2 comits will be there
+
+# git branch b2 master ==> create new branch b2 from master
+# git log --oneline ==> 2 commits will be there
+
+# git checkout master
+# vim login.txt ==> instert text ==>esc ==> :wq!
+# git add login.txt
+# git commit -m “file4 added to master”
+
+# git log --oneline ==> three commit id will be there --copy it on notepad
+
+# git checkout b2
+# vim logout.txt  ==> instert code for logout ==> esc ==> :wq!
+# git add logout.txt
+# git commit -m “logout on b2”
+# git log --online ==> 3 commits will be there on branch b2 ==> copy it on notepad
+
+
+Now if we use merge command, we will have commits and code as file1.txt, file2.txt, logout and login.txt(from master) . which is called as parallel merge
+
+But if we want to merge linear on branch then we will do rebase.
+Like this : file1.txt, file2.txt, login.txt(frommmaster) , logout.txt
+
+# git rebase master
+
+# git log --oneline ==> we will have commits arranges in liner fashion. ==> copy on notepad and show.
+
+************************************************************************************
+REMOTE REPOSITORY:
+
+Create login and password of GITHUB
+
+Create a new repository on the git hub
+
+Copy the URL of the repository to  add local repo to external repo:
+
+# git remote add origin URL of externalrepo
+
+# git remote -v // will show that origin is mapped to external repo url
+
+PUSH files of master into external repo
+# git branch ==> checkout on master branch
+# git push origin master ==> pushes master files to origin(external repo)
+Username: 
+Passowrd: 
+//Now go to external repo and see all the files of master will be available
+
+PUSH branch b1 onto external repo
+
+# git push origin b1  ==> pushes files of b1 branch onto external repo
+It will ask for username and password ..give follwoing details:
+Username: 
+Passowrd:
+Now go to external repo and see all the files of b1 will be available.
+
+************************************************************************
+DELETE Branches in external REPOSITORY
+
+- Delete branch on local repo:
+
+# git branch -D b1  ===> Branch get deleted on local
+
+# git branch
+
+Branch will still be on external repo
+
+To remove branch form external repo
+**********************************************
+# git push origin --delete b1
+
+It will ask for username and password ..give follwoing details:
+Username: 
+Passowrd: 
+
+PULL files from external repo to local repo
+***************************************************
+Create files from github and pull the file into local repo
+
+# git pull origin 
+# ls ==> new file will be there
+
+Fetch files from external repo to local repo
+******************************************************
+Create a new file on external repo 
+
+# git fetch origin
+
+# git pull origin  ===> pull= fetch +merge
+
+# git pull remotebranch localbranchname
+# ls    //All files will be there in local as same as remote
+
+Conflicts in external and local repo.
+*****************************************
+Create a file in remote repo file5.txt ==> add text
+Now create a file in local repo ==> same name file5.txt  ==> add text
+# git add file5.txt
+# git commit -m “local file5”
+
+Now without pulling from remote just push your changes
+
+# git push origin master 
+
+It will give conflict as there are changes in remote repo file
+
+So we have to first pull chnages from external repo , add them , commit them and then push our changes
+
+# git pull origin
+
+Agin conflict will be there
+
+Resolve conflict again
+
+# vim file5.txt ==> add the content required
+# git commit -a -m “new chnages”
+
+# git pull origin
+
+# git push origin master  ==> give credentials
+
+All changes will be there
+
+Cloning a repository
+*************************************************
+Go to github--> create a new repository 
+Use this repo:
+https://github.com/Sonal0409/7AMGITDEMO
+
+On host machine:
+Create an emplty directory
+# cd ..
+# pwd
+
+# mkdir project2
+# cd project2
+# git clone URL of new external repository
+
+==> it will copy all the files from external to your local repository
+
+# ls
+# cd directoryname/
+# ls  ==> files will be shown
+# ll -al  ==> all files and .git file will also be there
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
