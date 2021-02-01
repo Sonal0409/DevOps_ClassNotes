@@ -1,0 +1,527 @@
+
+Slide 65 for Maven
+
+Git installation:
+yum install git -y
+
+If using Git class instance-- go to root Directory
+
+
+SEE THAT YOU ARE IN ROOT DIRECTORY
+# cd
+# pwd
+************************************
+JAVA Installation
+
+SEE THAT YOU ARE IN ROOT DIRECTORY
+
+# yum install java-1.8.0-openjdk-devel
+# alternatives --config java
+# vim /etc/profile
+i
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.265.b01-1.amzn2.0.1.x86_64
+export PATH=$JAVA_HOME/bin:$PATH
+ESC :wq!
+# source /etc/profile
+
+MAVEN INSTALLATION
+****************************************
+# yum install maven
+# mvn --version
+# vim /etc/profile
+i
+export MAVEN_HOME=/usr/share/maven
+ESC :wq!
+
+# source /etc/profile
+# echo $MAVEN_HOME
+
+***************************************
+Clone GIt DEVOPS repository
+
+ mkdir myproject
+ cd myproject
+ mkdir projects
+ cd projects
+ git clone https://github.com/Sonal0409/DevOpsClassCodes
+ ls
+ cd DevOpsClassCodes
+ ls
+********************************
+RUN MAVEN COMMANDS
+ # mvn compile
+ # cd /root/myproject/projects/DevOpsClassCodes/target/classes
+ ls
+ cd com
+ ls
+ cd edurekademo
+ ls
+ cd utilities
+ ls
+ cd
+ pwd
+
+****************************************
+
+INSTALL JENKINS
+
+Go to https://pkg.jenkins.io/redhat-stable/
+
+and copy these commands
+
+ # sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+ # sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+ # yum install jenkins
+ # systemctl start jenkins
+ # systemctl status jenkins
+ # clear
+ # cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Click on install plugins
+Give username and password details
+Jenkisn is ready to use
+
+
+Creation of a Job:
+************************************
+
+#1 Jenkins --> New Item --> Job1 --> Build --> shell comand---> echo 'this is my first job'
+
+Save --> click on Build Now  --> click on build number --> click on Console to see output
+
+#2 Jenkins --> New Item --> Job2 --> Build --> shell comand---> 
+date >> /tmp/date.txt
+echo 'this is my second job'
+
+Save --> click on Build Now  --> click on build number --> click on Console to see output
+
+***********************************
+
+Creation of new User
+*************
+
+Jenkins--> Manage Jenkins--> Create/Add Users ----> left side ---> add User
+Add Name as DEV-->Last name -->Password--> Confirm Password--> Email --> submit
+
+New user created.
+
+*****************
+MANAGE AUTHORIZATION
+
+Matrix based Security
+
+ Goto MangeJenkins--->Global security --> Authorization Section---> select Matrix based Security
+ ---> Click on Add Users --> write admin---> give adminsitation access
+----> click on ADD --> write dev--> give Read access and job read access
+--> logout as admin -- login as Dev --> no jobs, only read access
+--> logout as Dev ---> login as Admin
+
+Project based Matrix Security
+
+ Goto MangeJenkins--->Global security --> Authorization Section---> Select Project based Matrix Security
+-->   Click on Add Users --> write admin---> give adminsitation access
+----> click on ADD --> write dev--> give Read access 
+--> go to Job1 --> configure--> general --> Check Enable project based security
+--> Add user as Dev --> give him access to read, build, write, workspace, build
+
+--> go to Job1 --> configure--> general --> Check Enable project based security
+--> Add user as Dev --> give him access to read
+
+Save file
+
+Logout as admin--> login as Dev --> you will see both the jobs , job2 will be only read access.
+
+Logout as dev and login as Admin
+
+**************************************
+
+Plugins
+
+******************
+
+AUDIT TRAIL :
+
+-->Manage Jenkins-->Manage plugins--> go to Available tab -->give audit trail
+---> click on checkbox-- Install without restart -- Installation complete
+
+--> Manage Jenkins--> Configure System--->Scroll down to AUDIT TRAIL
+--> From drop-down select --> log file
+---> log location : /tmp/jenkinsAudit.log
+---> Log file size --> 25
+---> Log file count --> 5 
+---> Log Seperator ==> leave it blank or give any special character.
+
+Go to job 1 and rerun it 
+Now go to server
+# cd /tmp
+# ls
+
+Audit log file will be available with name as ==> jenkinsAudit.log.0
+
+# cat jenkinsAudit.log.0  ==> to see contents of log.
+
+***********************
+
+EMAIL NOTIFICATION
+
+*********************
+
+--> Manage Jenkins--> Extended Email Notifications
+Give:
+
+Smtp server ==> smtp.gmail.com
+port : 465
+
+Click on advance 
+SMTPUsername: 
+Password:  -->  --> click on chnage password to enter yur password.
+
+Check SSL checkbox
+
+Save the chnages
+
+Now go back to Jenkins-->  Job1 --> configure--> post build actions-->edit email notification-->
+
+ ---> recipient list as ==> batch123@....
+--> scroll down select Attach build log
+--> Click on ADVANCE
+--> scroll down to TRIGGER
+--> Remove Failures
+--> Click on Add trigger button below and select Always 
+---> select recipents list and remove developers.
+
+Save and build now on Job.
+
+Email will be sent with log
+
+*****************************************
+TRIGGERS
+
+If we want to automatically trigger a Job
+
+1. Trigger prieodically
+
+Create anew Job--> build trigger--> build preodically --> give */2 * * * * --> Save and build now
+All build will be genrated automatically every 2 mins
+
+2. Trigger by POLL SCM
+
+Create a new Job-->Source code management--> Add git path
+
+https://github.com/Sonal0409/GITHUBJENKINSDEMO
+
+Build Triggers--> Poll SCM --> * * * * *
+
+Build will be generated each time there is a chnage in the repository only.
+
+*********************************
+
+Delivery Pipeline in Jenkins
+
+*******************************
+
+Jenkins--> Manage Jenkins-->Global Tool configuration
+
+Go to JDK section
+In this give:
+1. Uncheck -- install automatically
+2. JDK name as myjava
+3. Go to server type 
+# echo $JAVA_HOME ==> will give java location
+JAVA_HOME =
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.265.b01-1.amzn2.0.1.x86_64
+
+Save it.
+
+Under GIT==> leave it same 
+
+Under maven ==> lets install it automatically
+Type mymaven and check the install automatically box.
+Save the changes
+
+
+****************************************
+
+CREATION OF COMPILE JOB
+***********************************
+
+1. new Job --complie-->freestyle project
+2. Source code management --> select git
+--->give git path ===> https://github.com/Sonal0409/DevOpsClassCodes.git
+
+3. build ==> select invoke top level maven targets
+   select maven version===> mymaven
+    goal ==> compile
+4. save ==> build now 
+So all the compiled files will be present at this location
+==> look for this line in console output at the end on jenkins
+Compiling 13 source files to /var/lib/jenkins/workspace/compile1/target/classes
+
+5. Go to workspace on the left side of jenkins Job compile
+In the folder go to ==> target folder==> go to classes/com/edurekademo
+==> click on edurekademo==> got to utilities==> all class files will be there which have recently been compiled.
+******************************
+2nd JOB ==>Code Review
+*********************
+
+Jenkins--> new item--> Name= code Review==> freestyle project
+==> source codemanagement==>select git==> 
+give git repo name https://github.com/Sonal0409/DevOpsClassCodes
+
+Step 2: build ==> invoke top level maven target==>
+ select maven version==>mymaven ==> goal = pmd:pmd
+
+save==> build now
+==> click on build number and see the console
+
+Goto Workspace on the left side of jenkins Job code review
+In the folder go to ==> target folder ==> you will find pmd.xml file.
+
+CONVERT FILE TO TREND REPORT
+*******************************
+ manage jenkins--> manage plugins--> available --> Search for pmd plugin--> install it.
+
+Now go to the job Code Review==> go to post build actions ==> select Publish PMD anaylsys report
+
+under PMD results==> give path of pmd.xml file ie:  target/pmd.xml
+
+Save the file and build now.
+
+After the build is successfull, you will see PMD Warnings
+
+So you will see 12 new warning have been generated on the code.
+Scroll down 
+Under package click on first one to check warnings.
+
+*********************************
+JOB3: Testing --Unit Test report
+********************************
+
+1. jenkins--> new item--> Name= unitTest==> freestyle project
+==> source codemanagement==>select git==> give git repo name https://github.com/Sonal0409/DevOpsClassCodes
+
+2. build ==> invoke top level maven target==> select maven version==>mymaven ==> goal = test
+
+3. Save and Build now.
+
+4. Check the workspace
+
+5. surefire-reports will be present
+
+But we cannot understand them easily. So lets generate understandable reports by using Junit reports option under post build actions
+
+6. Go back to job==> post build actions==> select junit test result job
+==> give target/surefire-reports/*.xml  ===>under test report xml
+This is path where xml files are there.
+Here *.xml is as we want to use all the xml files
+
+7. Save and build again
+
+Go to build number ===> on left side you will see Test Result 
+Click on it and you can see all pass and fail details of the tests
+
+**************************
+JOB4 : Metric check
+************************
+
+1. Go to jenkins--> new item--> Name= Metriccheck==> freestyle project
+==> source codemanagement==>select git==> give git repo name https://github.com/Sonal0409/DevOpsClassCodes
+
+2.  build ==> invoke top level maven target==> select mymaven
+    goal = cobertura:cobertura -Dcobertura.report.format=xml
+
+3.==> save==> build now
+==> click on build number and see the console
+
+4. go to Workspace ==> target/site/cobertura/coverage.xml  
+
+The xml file will be there, But we cannot understand them easily. So lets generate understandable reports by downloading cobertura plugin
+
+Go to manage jenkins--> manage plugins--> cobertura --> install it
+
+Go back to the job--> post build actions--> select publish cobertura coverage report
+Under cobertura xml pattern give ==> target/site/cobertura/coverage.xml   ==> you can take the path from below displayed text.
+
+Save and build again
+Click build number ==> on left side you will find Coverage Report==> click on it ==> we cna see the coverage report.
+
+**********************************
+Job5 Package Job
+***************************
+
+Go to jenkins--> new item--> Name= Package==> freestyle project
+==> source codemanagement==>select git==> give git repo name https://github.com/Sonal0409/DevOpsClassCodes
+ 
+build ==> invoke top level maven target==>mymaven
+
+ goal = package
+
+==> save==> build now
+==> click on build number and see the console
+
+==> go to workspace ==> target/addressbook.war
+
+
+**************
+Connecting all the 5 jobs so that each job can be triggered:
+*****************
+
+
+******************************
+Pipeline as a code
+**************************
+Lets create a pipeline using code:
+
+Create 1 job and add multiple task (using code) in the job and run multiple tasks in 1 job
+
+This code is written using pipeline DSL(domain specific language]
+It is derieved using groovy
+
+
+Create a new job ==> select project as pipeline
+
+
+pipeline{
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent any
+    stages{
+        stage('checkout'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+            }
+        }
+        stage('compile'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('codeReview'){
+            steps{
+                sh 'mvn pmd:pmd'
+            }
+        }
+        stage('unitTest'){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('metricCheck'){
+            steps{
+                sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+            }
+        }
+        stage('package'){
+            steps{
+                sh 'mvn package'
+            }
+            
+        }
+
+    }
+}
+
+
+************************************
+Master and Slave Set up
+
+restart the instance.
+Restart the jenkins server
+now take public ip and loginto jenkins
+
+Step 1: Go to Manage Jenkins ---> CONFIGURE SYSTEM ---> Check the Jenkins URL is same as URL of browser --> Save
+Step 2: Go to Manage Jenkins---> CONFIGURE GLOBAL SECURITY --> Scroll down to AGENTS-->select RANDOM radiobutton--> Save
+Step 3: Go to Manage Jenkins---> MAnage Nodes and Clouds  --> New Node
+
+Select New Node--> give name as Winslave--> select radio button permanamet Agent
+
+Name : winslave
+Description: give windows 10 machine 
+==> # of executors = 1 ==> means number of jobs that we want to run on this slave node. Let it be 1 for now
+===> Remote root directory ==> C:\jenkinsdir
+Location of a directory folder on your windows machine , so that jenkins can create a workspace folder and store all the files. As we have seen earlier while executiong jobs.
+For this --> got to C drive and create an emapty folder.
+C:\jenkinsdir
+
+====>  Label : win_slave ==> this is like a tag to slave machine. This is how we will identify the slave machine--> remeber this
+
+===> Usage: 
+Select 2nd option: Only build jobs with label expressionmatching the job :
+This means for which ever job we will give label as win_slave that job only will run on this job.
+
+===> Launch Method : select option : Launch agent by connecting to master.
+
+Scroll down
+
+Add tools
+
+Add git path as C:\Program Files\Git\cmd\git.exe
+Add java path as C:\Program Files (x86)\Java\jdk1.8.0_191
+
+SAVE the job.
+
+Now go to win_slave ==> download the agent.jar file and put it in your jenkinsdir folder.
+
+Copy the path and change the public ip in below path
+java -jar agent.jar -jnlpUrl http://3.139.60.71:8080/computer/winslave/slave-agent.jnlp -secret 61e8e20badd531b48caeffac8d686f182eb2d77a1c303ee39c5db9d00117c0be -workDir "C:\jenkinsdir"
+
+Go to bash and start jenkins, refresh instance
+Go to cmd prompt
+change to cd c:\jenkinsdir
+copy the above jenkins agent path
+System will get connected.
+
+***************************************
+RUN a job on Agent
+
+Go to Dashboard
+
+Select the package job---> configure --> GENERAL --> click on Restrict where this project can be run and enter win_slave  
+
+SAVE THE JOB
+
+CLICK on BUILD NOW -- to start the build
+
+CLick on build number--> got to console --to check it is executing on AGent
+
+Go to C folder-->jekinsdir---> C:\jenkinsdir\workspace\package\target==> 
+you will see addressbook.war file.
+
+
+On linux:
+
+$ which git
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
