@@ -1,0 +1,125 @@
+UseCase 1
+==============
+Create a docker compose file for setting up a wordpress container and link 
+ with a mysql container
+---
+version: '3'
+
+services:
+ mydb:
+  image: mysql:5
+  environment:
+   MYSQL_ROOT_PASSWORD: psswd
+
+ mywordpress:
+  image: wordpress
+  ports:
+   - 9999:80
+  links:
+   - mydb:mysql
+...
+
+To start the containers
+docker-compose up 
+To start the containers indetached node
+docker-compose up -d
+
+To stop the containers
+docker-compose stop
+
+To stop and delete the containers
+docker-compose down
+
+To see the list of processes in the container
+docker-compose ps
+
+To start the stopped container
+docker-compose start
+
+To pause the executiong 
+docker-compose pause
+
+To unpause
+docker-compose unpause
+******************************************
+Create a docker compose file for seeting up the CI-CD environment
+where a jenkins contianer is linked with 2 tomcat contianer
+vim docker-compose.yml
+---
+version: '3'
+
+services:
+ jenkinsserver:
+  image: jenkins
+  ports:
+   - 5050:8080
+
+ qaserver:
+  image: tomcat
+  ports:
+   - 6060:8080
+  links:
+   - jenkinsserver:jenkins
+
+ prodserver:
+  image: tomcat
+  ports:
+   - 7070:8080
+  links:
+   - jenkinsserver:jenkins
+...
+=================================================================================
+Docker compose file to setup the LAMP environment
+
+vim docker-compose.yml
+
+version: '3'
+
+services:
+ mydb:
+  image: mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: passwd
+
+ apache:
+  image: httpd
+  ports:
+   - 9090:80
+  links:
+   - mydb:mysql
+
+ php:
+  image: php:7.2-apache
+  links:
+   - mydb:mysql
+   - apache:httpd
+
+=================================================================================
+Docker compose file to setup the selenium testing environment where
+a hub container can be linked  with a chrome and firefox node containers
+
+---
+version: '3'
+
+services:
+ hub:
+  image: selenium/hub
+  ports:
+   - 4444:4444
+
+ chrome:
+  image: selenium/node-chrome-debug
+  ports:
+   - 5901:5900
+  links:
+   - hub:selenium
+
+ firefox:
+  image: selenium/node-firefox-debug
+  ports:
+   - 5902:5900
+  links:
+   - hub:selenium
+
+
+...
