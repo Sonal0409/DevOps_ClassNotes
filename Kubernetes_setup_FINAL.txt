@@ -1,0 +1,82 @@
+Install, start and enable docker service
+
+yum install -y -q yum-utils device-mapper-persistent-data lvm2 > /dev/null 2>&1
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo > /dev/null 2>&1
+yum install -y -q docker-ce >/dev/null 2>&1
+
+
+systemctl start docker
+systemctl enable docker
+======================================================================
+Update sysctl settings for Kubernetes networking
+
+cat >>/etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+
+============================================================================================
+Add Kubernetes to yum repository
+
+cat >>/etc/yum.repos.d/kubernetes.repo<<EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+======================================================================================
+Install Kubernetes
+yum install -y kubeadm kubelet kubectl
+
+==================================================================================
+Enable and start Kubernetes service
+
+systemctl start kubelet
+systemctl enable kubelet
+=====================================================================================
+Repeat the above steps on Master and slaves
+=======================================================================================
+
+On Master=============
+===========
+Initilise the Kubernetes cluster
+-----------------------------------------
+
+kubeadm init --apiserver-advertise-address=ip_of_master  --pod-network-cidr=192.168.0.0/16
+
+=========================================================================================
+
+To be able to use kubectl command to connect and interact with the cluster, 
+the user needs kube config file.
+
+mkdir /home/centos/.kube
+cp /etc/kubernetes/admin.conf /home/centos/.kube/config
+chown -R centos:centos /home/centos/.kube
+
+========================================================================================
+Deploy calico network
+kubectl create -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
+
+========================================================================================
+For slaves to join the cluster
+kubeadm token create --print-join-command
+
+======================================================================================
+Check the pods of kube-system  are running
+
+kubectl get pods -n kube-system
+
+
+
+
+
+
+
+
+
