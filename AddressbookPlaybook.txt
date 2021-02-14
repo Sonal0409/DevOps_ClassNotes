@@ -1,0 +1,22 @@
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: install tomcat
+    yum: name=tomcat state=present
+  - name: start tomcat
+    service: name=tomcat state=started
+  - name: install docker
+    yum: name=docker state=present
+  - name: start docker
+    service: name=docker state=started
+  - name: install git
+    yum: name=git state=present
+  - name: get repo
+    git: repo=https://github.com/Sonal0409/dockerdemo.git dest=/tmp/gitrepo
+  - name: Build Dockerfile
+    command: chdir=/tmp/gitrepo docker build -t addressbook:ansible .
+  - name: run Image
+    command: docker run -itd -P addressbook:ansible
