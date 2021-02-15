@@ -1,0 +1,762 @@
+Start 2 Instances in AWS:
+
+Note down prive ip and Hostname of Puppetserver
+
+private ip : 172.31.10.193
+private hostname: ip-172-31-10-193.us-east-2.compute.internal
+
+Note down prive ip and Hostname of PuppetAgent
+
+private ip: 172.31.9.221
+private hostname: ip-172-31-9-221.us-east-2.compute.internal
+
+Start the AWS machines
+
+Open 2 Bash instances
+start one for puppet server
+start one for puppetAgent
+
+ON PUPPET SERVER
+*************************
+# sudo su -
+
+# vim /etc/hosts      // open this file and add below details on top of file
+
+Add the private ip and provate hostname of pupperserver first
+Add the private ip and private hostname of puppet agent in next line
+
+172.31.10.193 ip-172-31-10-193.us-east-2.compute.internal
+172.31.9.221 ip-172-31-9-221.us-east-2.compute.internal
+
+ON PuppetAGent
+***********************
+Repeat above steps:
+
+# sudo su -
+
+# vim /etc/hosts      // open this file and add below details on top of file
+
+Add the private ip and provate hostname of pupperserver first
+Add the private ip and private hostname of puppet agent in next line
+
+172.31.10.193 ip-172-31-10-193.us-east-2.compute.internal
+172.31.9.221 ip-172-31-9-221.us-east-2.compute.internal
+
+
+Go back to PUPPETSERVER  -SETUP
+**********************************
+
+1. Download the puppet package 
+
+# rpm -Uvh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
+
+2. Download puppetserver now
+
+# yum install puppetserver -y
+
+3. Add server dns name in this file
+
+# vim /etc/puppetlabs/puppet/puppet.conf
+
+Add master private dns_hostname above vardir and after [master]
+
+dns_alt_names=ip-172-31-10-193.us-east-2.compute.internal
+
+4. Update JAVA_ARGS from 2g to 512m
+
+# vim /etc/sysconfig/puppetserver
+
+Update this line in above file
+
+# Modify this if you'd like to change the memory allocation, enable JMX, etc
+JAVA_ARGS="-Xms512m -Xmx512m -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger"
+
+5.restart the system
+
+# exec bash -l
+
+6. Start puppetserver
+
+# systemctl start puppetserver
+
+It will take time start server.. meanwhile setup puppetAgent
+
+***********************************
+PuppetAGENT setup
+
+1. download puppet package
+
+# rpm -Uvh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
+
+2. Download puppet package
+
+# yum install puppet -y
+
+3. vim /etc/puppetlabs/puppet/puppet.conf
+
+Add master private hostname of server as given below, at the end of all #
+
+server=ip-172-31-10-193.us-east-2.compute.internal
+
+4. restart bash
+
+# exec bash -l  
+
+Check if puppet Server is started and only then start Agent
+
+5. Start puppet
+
+# systemctl start puppet
+
+Complete set up
+
+****************************
+
+Check if host and server are connected or not.
+Check if host is able to pull the catalogue form server or not.
+
+On Agent machine:
+
+command to pull catalogue is:
+
+# puppet agent --test
+
+it will give message as :
+Exiting; no certificate found and waitforcert is disabled
+
+That means, puppetagent has sent the facts to the master but master has not sigend the certificate.
+once server/master signs the certificate, agent will be able to pull the catalogue and apply the configurations.
+
+Go to PuppetServer machine to generate certificate and sign the certificate
+
+#  puppet cert list --all
+
+will give list of certificates for all the agents that are connected to the host
+
+the first row has the certificate that for our agent and is not signed
+
+ip-172-31-9-221.us-east-2.compute.internal
+
+Copy it as given above and execute this command
+
+# puppet cert sign ip-172-31-9-221.us-east-2.compute.internal
+
+This will sign the certificate
+
+**********************
+
+Go to Agent
+
+************
+
+# puppet agent --test
+
+Now catalogue will be applied.
+
+******************************
+
+Wite puppet code in puppetServer, code is written in declarative scripting language
+
+**********************
+
+Location for writing puppetcode is:
+
+# cd /etc/puppetlabs/code/environments/production/manifests/
+
+# ls
+
+# vim site.pp
+
+Also get the hostname of agent which will be given as node:
+Go to Agent machine:
+# hostname
+ip-172-31-9-221.us-east-2.compute.internal
+*******************
+
+
+On ServerMachine
+#vim site.pp   --code to create file info.txt on agents
+
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+file{'/info.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+}
+
+# puppet parser validate site.pp
+
+just validate it, the agent has to pull the catalogue after 30 mins and chnages will be applied
+we cannot wait for 30 mins so lets go to agent machien and manually pull the catalogue
+
+On Agent machine:
+
+# puppet agent --test
+
+catalogue will be applied, file will be now on the agent
+
+# cd /
+# ls
+ info.txt will be there
+
+*****************************
+
+Lets add package and service in the site.pp
+
+again go to site.pp
+
+# vim site.pp
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+file{'/info1.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+package{'httpd':
+ ensure => 'present',
+ }
+service{'httpd':
+ ensure => 'running',
+ enable => true,
+}
+}
+
+go to AGENT machine
+
+# puppet agent --test
+
+catalogue will be applied
+
+httpd-2.4.46-1.amzn2.x86_64  will be there
+
+# rpm -qa httpd
+
+*********************************
+
+lets parametrize the code further
+
+Selector:
+
+# vim site.pp
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+
+class{'linux':
+}
+}
+
+class linux{
+
+file{'/info1.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+package{'httpd':
+ ensure => 'present',
+ }
+service{'httpd':
+ ensure => 'running',
+ enable => true,
+}
+}
+
+:wq!
+
+# puppet parser validate site.pp
+
+Go to Agent
+
+# puppet agent --test
+
+************************************
+
+Add parametrize the package name: SELECTORS
+
+# vim site.pp
+
+$httpdservice=$osfamily?{
+'RedHat' => 'httpd',
+'Debian' => 'apache2',
+default => 'httpd',
+}
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+
+class{'linux':
+}
+}
+
+class linux{
+
+file{'/info1.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+package{$httpdservice:
+ ensure => 'present',
+ }
+service{$httpdservice:
+ ensure => 'running',
+ enable => true,
+}
+}
+
+:wq!
+
+Agent
+
+# puppet agent --test
+
+*******************************************
+
+Array Variables in code:
+***********************************
+
+$httpdservice=$osfamily?{
+'RedHat' => 'httpd',
+'Debian' => 'apache2',
+default => 'httpd',
+}
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+
+class{'linux':
+}
+}
+
+class linux{
+
+file{'/info1.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+
+$admintools=['git','nano','screen']
+package{$admintools:
+ ensure => 'present',
+}
+
+
+package{$httpdservice:
+ ensure => 'present',
+ }
+service{$httpdservice:
+ ensure => 'running',
+ enable => true,
+}
+}
+
+:wq!
+# puppet parser validate site.pp
+
+Agent
+
+# puppet agent --test
+
+git willbe installed, nano and screen are already there
+
+# git --version
+# nano --version
+# screen --version
+
+*****************************
+
+MODULES:
+*********************
+
+We can write our own module and call it in site.pp
+
+manifests] # cd ..
+production] # ls
+
+we have modules
+
+production] # cd modules/
+modules] # ls
+modules] # puppet module generate sonal-deploy
+press enter
+press enter
+press enter
+press enter
+press enter
+modules] # ls
+deploy will be there
+modules] # cd deploy/
+deploy] # ls
+examples  Gemfile  manifests  metadata.json  Rakefile  README.md  spec
+
+all these subdirectories will be there and we are interested in manifests directory
+
+deploy] # cd manifests
+# ls
+init.pp will be there
+
+mainfests] vim init.pp
+
+remove the comments and add docker package and start docker service
+
+class deploy {
+
+package{'docker':
+ ensure => 'present',
+}
+service{'docker':
+ ensure => 'running',
+ enable => true,
+}
+
+}
+
+manifests] # cd ..
+deploy] cd ..
+modules] cd..
+production] ls
+# cd manifests
+# ls
+# vim site.pp
+
+call the class from modules directory
+
+i
+
+$httpdservice=$osfamily?{
+'RedHat' => 'httpd',
+'Debian' => 'apache2',
+default => 'httpd',
+}
+
+node 'ip-172-31-9-221.us-east-2.compute.internal'{
+
+class{'linux':
+}
+
+class{'deploy':
+}
+}
+
+class linux{
+
+file{'/info1.txt':
+ ensure => 'present',
+ content => "file from server",
+}
+$admintools=['git','nano','screen']
+package{$admintools:
+ ensure => 'present',
+}
+package{$httpdservice:
+ ensure => 'present',
+ }
+service{$httpdservice:
+ ensure => 'running',
+ enable => true,
+}
+
+:wq!
+
+# puppet parser validate site.pp
+
+AGENT
+
+# puppet agent --test
+
+# docker --version
+
+***************************
+go back to modules directory and now pull module from forge
+
+# cd ..
+production] # cd modules
+modules]# puppet module install puppetlabs-vcsrepo
+
+# ls
+deploy  vcsrepo
+
+# cd deploy
+# ls
+# cd manifests
+# vim init.pp
+
+class deploy {
+
+package{'docker':
+ ensure => 'present',
+}
+service{'docker':
+ ensure => 'running',
+ enable => true,
+}
+vcsrepo { '/tmp/gitrepo':
+  ensure   => present,
+  provider => git,
+  source   => 'https://github.com/Sonal0409/dockerdemo.git',
+}
+}
+
+:wq!
+
+# puppet parser validate init.pp
+
+Agent:
+*******
+
+
+# puppet agent --test
+
+# cd /tmp
+# ls
+# git repo will be there
+
+
+*********************
+
+Lets pull another module docker to build the dockerfile and generate containers
+
+***********************
+cd ..
+cd ..
+modules] # puppet module install puppetlabs-docker
+
+# ls
+docker will be there
+
+# cd deploy
+# ls
+# cd manifests
+# vim init.pp
+
+
+class deploy {
+
+package{'docker':
+ ensure => 'present',
+}
+service{'docker':
+ ensure => 'running',
+ enable => true,
+}
+vcsrepo { '/tmp/gitrepo':
+  ensure   => present,
+  provider => git,
+  source   => 'https://github.com/Sonal0409/dockerdemo.git',
+}
+docker::image { 'myimage:puppet':
+  docker_file => '/tmp/gitrepo/dockerfile'
+}
+docker::run { 'c1':
+  image   => 'myimage:puppet',
+  ports   => '8080',
+}
+
+}
+
+
+:wq!
+# puppet parser validate init.pp
+
+Agent
+*********
+
+# puppet agent --test
+
+it may fail..with ruby error.. run agian
+
+# puppet agent --test
+
+# docker images
+
+# docker ps -a
+
+Access application from web:
+
+http://18.220.30.216:32768/sample/
+
+**************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

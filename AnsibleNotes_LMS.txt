@@ -1,0 +1,251 @@
+Ansible Notes
+
+Create 2 instances and start them
+
+Set up on ACM:
+********************************
+
+Step1: 
+**************
+go to vim /etc/ssh/sshd_config
+
+	i
+scroll down
+remove the # for  password Authentication Yes
+Add # for 	  password Authentication No
+
+:wq!
+
+Step 2:
+**************
+Create password for ec2-user
+
+# passwd ec2-user
+Newpassword:
+ConfirmPassword:
+
+********************
+Step 3:
+***********
+
+Add ec2-user in sudoers files and give all permission
+
+# vim /etc/sudoers
+
+i
+scroll down
+
+under root add like this
+
+ec2-user ALL=NOPASSWD: ALL
+
+**************************
+Step 4:
+
+Restart your sshd connection
+
+# systemctl restart sshd
+
+*******************
+
+Repeat all the 4 steps on Host machine also and restart the sshd connection on host machine.
+
+************************
+
+Install Ansible :
+
+Step 1:
+*************
+
+# yum list | grep ansible  // you will not find ansible package as default in yum
+
+So install epel replositories and it will ass ansible to yum repository
+
+
+	# yum install epel-release
+
+// copy the command sudo amazon-linux-extras install epel and execute it
+
+	# sudo amazon-linux-extras install epel
+
+give y
+
+Complete!
+
+You will ansible package is now available with yum
+
+	# yum list | grep ansible
+
+//ansible will be available (wait for few seconds)
+
+
+	# yum install ansible
+
+press y
+again press y
+Complete!
+
+	# ansible --version
+
+version of ansible isntalled will be displayed.
+
+*****************************************
+CREATE INVENTORY ON ACM and ADD Host details
+*****************************************
+
+# vim /etc/ansible/hosts
+
+Scroll down to end and add
+
+[webservers]
+paste private ip of host ==> 172.31.39.169
+
+:wq!
+
+***********************************************
+
+OPEN SECURE SHELL CONNECTION 
+
+***********************************************
+
+Step 1: change to ec2-user
+
+	# su - ec2-user
+
+	# ssh-keygen
+
+press enter
+press enter
+press enter
+
+ssh key will be generated
+
+Step 2: copy key on to the host
+
+	# ssh-copy-id -i ec2-user@private ip of host
+
+press yes
+enter passowrd ==>
+
+ssh connection will be done
+In the message we will have a command to loginto the host from ACM, execute it
+
+	# ssh 'ec2-user@172.31.35.169'
+
+we will be connected to the host
+
+exit
+back to ACM
+
+*****************************************
+Modules in ANSIBLE
+
+1. adhoc ping command
+
+# ansible -m ping webservers
+
+response will be a pong from all hosts under webservers
+
+
+Module2 : command
+
+# ansible -m command -a "uptime" webservers
+
+will give the uptime of hosts in webservers
+
+
+To chekc all modules in ansible
+
+# ansible-doc -l
+
+use up arrow key and down arrow key to scroll up and down.
+press q to exit
+********************************
+
+Playbook2 -- For TomCat
+
+# sudo vim playbook2.yml
+
+i
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: install tomcat
+    yum: name=tomcat state=present
+  - name: start tomcat
+    service: name=tomcat state=started
+  - name: deploy war file
+    get_url:
+     url=https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+     dest=/usr/share/tomcat/webapps
+    notify: restart tomcat
+  handlers:
+   - name: restart tomcat
+     service: name=tomcat state=restarted
+
+Syntax check:
+
+# ansible-playbook playbook1.yml --syntax-check
+
+# ansible-playbook playbook1.yml
+
+********************************************
+
+playbook.yml (httpd) and deploy a html page
+
+# sudo vim playbook.yml
+
+i
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: install httpd
+    yum: name=httpd state=present
+  - name: start httpd
+    service: name=httpd state=started
+  - name: deploy html file
+    copy: src=/etc/ansible/index.html dest=/var/www/html
+    notify: restart httpd
+  handlers:
+  - name: restart httpd
+    service: name=httpd state=restarted
+
+:wq!
+
+Check syntax
+
+	# ansible-playbook playbook.yml --syntax-check
+Now run the playbook
+
+	# ansible-playbook playbook.yml
+
+
+*************************************
+
+docker deplyment
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: install docker
+    yum: name=docker state=present
+  - name: start docker
+    service: name=docker state=started
+  - name: install git
+    yum: name=git state=present
+  - name: get the dockerfile from githib
+    git: repo=https://github.com/Sonal0409/dockerdemo.git dest=/tmp/gitrepo
+  - name: build dockerfile
+    command: chdir=/tmp/gitrepo docker build -t deployimage:ansible .
+  - name: run the dockerfile
+    command: docker run -itd -P deployimage:ansible
+
+*****************************************

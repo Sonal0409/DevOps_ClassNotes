@@ -1,0 +1,99 @@
+Ansible Tower is supported by the following operating systems:
+
+Red Hat Enterprise Linux 6 64-bit
+Red Hat Enterprise Linux 7 64-bit
+CentOS 6 64-bit
+CentOS 7 64-bit
+Ubuntu 12.04 LTS 64-bit
+Ubuntu 14.04 LTS 64-bit
+Ubuntu 16.04 LTS 64 bit
+You should have the latest stable release of Ansible.
+
+64-bit support required (kernel and runtime) and 20 GB hard disk.
+
+Minimum 2 GB RAM (4+ GB RAM recommended) is required.
+
+2 GB RAM (minimum and recommended for Vagrant trial installations
+4 GB RAM is recommended /100 forks
+For Amazon EC2: Instance size of m3.medium or larger is required for less than 100 hosts and if you have more than 100 hosts, then you require an instance size of m3.xlarge or larger.
+
+For HA MongoDB setups, you can use the below formula for a rough estimate of the amount of space required.
+
+Installation of Ansible Tower
+Before you install Ansible Tower, you have to first install and configure Ansible on your operating system and then also install PostgreSQL.
+
+So, first let’s start by installing and configuring Ansible. I will be using Ubuntu – 16.04 version as my operating system.
+
+Install and Configure Ansible on Ubuntu
+Step 1: As a root user, configure the Ansible PPA using the below commands.
+
+apt-get install software-properties-common
+apt-add-repository ppa:ansible/ansible
+Step 2: After configuring, install Ansible using the below commands.
+
+apt-get update
+apt-get install ansible
+After you are done installing, install PostgreSQL.
+
+Installing PostgreSQL
+Use the below commands, to install PostgreSQL.
+
+apt-get update
+sudo apt-get install postgresql postgresql-contrib
+Download Ansible Tower
+Step 1.1: Once you are done installing Ansible, register to download the Ansible – Tower.
+
+Step 1.2: You will receive an email after you register to download the Ansible Tower. Open your mail and then click on the download button, to download.
+
+Step 1.3: Then extract the Ansible Tower installation tool using the below commands.
+
+tar xvzf ansible-tower-setup-latest.tar.gz
+ansible-tower-setup-<tower_version>
+where tower-version, is the version of the tower you have downloaded.
+
+Step 2: After that set up your inventory file, where you have to mention the necessary passwords (admin_password, pg_password, rabbitmq_password) in the inventory file.
+
+Step 3: Now, as the Tower setup playbook script uses the inventory file, it has to be invoked as ./setup.sh from the path where you unpacked the Tower installer tarball.
+
+./setup.sh
+Step 4: Once you are done setting up the Tower, use the web browser to access the Tower server and view the Tower login screen, wherein you have to enter the username and password, to access the Tower Dashboard.
+
+Create a User
+To create a user, go the settings option and then choose the User tab. Once you enter the User tab, click on the Add option to add a new User. Mention the details required and then click on Save.
+
+Create an Inventory
+Now, create an Inventory, by just clicking on the Inventories option and then going to the Add option.
+
+Once you click on the Add option, mention all the details required like the name, description, organization and then click on Save.
+
+Create a Host
+To create a host, go the Inventories tab and choose the inventory to which you want to add hosts. Then choose the Hosts tab and click on Add Hosts. Here I want to add hosts for the inventory that was created above. Once the details are mentioned, click on Save.
+
+Create a Credential
+After creating hosts, create a credential by going to the settings options, and then choose the Credentials tab. After that, go to the Add option and mention the details. Once you are done, mentioning the details, click on Save.
+
+Setting up a Project
+There are two ways to access a simple playbook, either you can do it manually or by specifying a link from a Github repository.
+
+In this blog, I am going to access the project manually.
+
+Accessing a Manually created Playbook
+For accessing a manually created playbook, you first have to create a playbook and then set up the project.
+
+So, follow the below steps and start creating a playbook.
+
+Use command line console as a root user and create a directory for your project on the Tower server file system, in which to store your Ansible playbooks for this project.
+
+Now, make a new project directory by creating it on the Tower filesystem under the Project Base Path directory, located by default in “/var/lib/awx/projects/”. Here the new directory is DEMO.
+
+Now, let’s start setting up a project.
+
+To set up a project use your web browser, create the new project by clicking on the Projects link at the top of the Tower Dashboard and click on the Add button.
+
+Once you click on the Add button, you will be redirected to a page wherein you have to fill in details such as Name and Description of Project. Then, set the SCM type to be Manual, and for the Playbook Directory, select a value which corresponds to the subdirectory you created and then click on Save.
+
+Create a Job Template
+Now, let’s create a Job Template, by going to the Job Template tab and then clicking on the Add button. Once you click on the Add button, you will be re-directed to the page where you have to fill in the details such as Name, Description, Inventory name, Project, Playbooks, Credentials.
+
+Launch a Job
+From the Job Templates overview screen, click the Launch button(rocket symbol) to run the Job Template. When you launch the job you can clearly see at the end of the output that the message has been printed.

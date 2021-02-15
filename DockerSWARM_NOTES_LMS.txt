@@ -1,0 +1,346 @@
+Docker Swarm
+*****************************
+
+SETUP OF DOCKER SWARM:
+******************************
+Create 3 AWS instances and name them as Manager, worker 1 and worker 2.
+
+Go to git bash
+
+# cd downloads/
+
+# SSH path from AWS for manager
+
+# sudo su -
+
+# yum install docker
+
+# vim /etc/hostname  ==> to chnage the hostname of this machine to Manager
+
+:wq!  
+
+# init 6  ==> restart the machine
+
+
+Again open git bash
+
+# cd downloads/
+
+# SSH path from AWS for Worker1
+
+# sudo su -
+
+# yum install docker
+
+# vim /etc/hostname  ==> to chnage the hostname of this machine to Worker1
+
+:wq!  
+
+# init 6  ==> restart the machine
+
+Again open git bash
+
+# cd downloads/
+
+# SSH path from AWS for Worker2
+
+
+# sudo su -
+
+# yum install docker
+
+# vim /etc/hostname  ==> to chnage the hostname of this machine to Worker2
+
+:wq!  
+
+# init 6  ==> restart the machine
+
+****************************************
+Initialize the Swarm Manager:
+***************************************
+ON MANAGER:
+*************
+Go to the manager machine and give below command
+
+# systemctl start docker
+
+# docker swarm init --advertise-addr 172.31.17.248(privateip of manager)
+
+Curent node will be now be swarm Manager and it will generate a token id that can be executed on worker nodes so that they will join the swarm as workers.
+
+==> Copy the token id on notepad
+************************
+
+WORKER1 SETUP
+**********************
+
+# systemctl start docker
+
+paste the token command here from notepad  // as shown below:
+
+# docker swarm join --token SWMTKN-1-66xevqpe5r6h1gtcps1m867q8jcu93deyk87qudqdp7nyf8omk-7vna75w6jip5hmqp4h55bi3s3 172.31.17.248:2377
+
+// the worker1 will now join the swarm as worker
+It will give message as: This node joined a swarm as a worker.
+
+MANAGER NODE:
+
+Go to manager node and see if worker1 has joined the swarm or not
+
+# docker node ls
+
+2 nodes will be there .. maanager and worker1
+
+
+WORKER2 SETUP
+**********************
+
+# systemctl start docker
+
+paste the token command here from notepad  // as shown below:
+
+# docker swarm join --token SWMTKN-1-66xevqpe5r6h1gtcps1m867q8jcu93deyk87qudqdp7nyf8omk-7vna75w6jip5hmqp4h55bi3s3 172.31.17.248:2377
+
+// the worker2 will now join the swarm as worker
+It will give message as: This node joined a swarm as a worker.
+
+MANAGER NODE:
+
+Go to manager node and see if worker1 has joined the swarm or not
+
+# docker node ls
+
+3 nodes will be there .. maanager and worker1 and worker2
+
+**********SETUP COMPLETE********************************************
+
+
+SCEANRIO 1 : LOAD BALANCING or distribution of Service
+
+************************************************
+
+Here we will create a service nginx with 5 replicas and perform port mapping
+
+	# docker service create --name mywb -p 8989:80 --replicas 5 nginx
+
+==>This will create 5 replicas of nginx and it is distributed on the nodes.
+
+==> to check the services
+
+	# docker service ps mywb
+
+
+ List all services on SWARM
+*******************************
+	# docker service ls
+
+*********************************
+Delete service on the SWARm
+
+	# docker service rm mywb
+
+//removes service
+
+	# docker service ls  // no service will be there
+*****************************************
+Scaling
+****************************
+Scenario2:
+
+Using the concept of scaling we can increase or reduce the replicas
+
+
+1.Create tomcat service with replica 3 with posrt mapping
+
+# docker service create --name mytomcat  -p 9090:8080 --replicas 3 tomcat
+
+2. 	# docker service ps mytomcat
+
+3. Now scale up the service to 5
+
+	# docker service scale mytomcat=5
+
+4. check if 5 replicas of tomcat are running
+
+	# docker service ps mytomcat    
+
+// total of 5 services will be there 2 more services added.
+
+5. Now scale down the services to 3
+
+	# docker service scale mytomcat=3
+
+6.  check if 3 replicas of tomcat are running
+
+	# docker service ps mytomcat    
+
+// total of 3 services will be there.
+
+******************************************
+SCENARIO 3: FAILOVER
+**************************************
+A. Create a httpd service with 6 replicas and delete one replica running on the manager 
+
+1. Create httpd service with 6 replicas
+
+      # docker service create --name mywebserver -p 9090:80 --replicas 6 httpd
+
+2. Check if all 6 replicas are running or not.
+
+ 	# docker service ps mywebserver
+
+3. On the MANAGER machine, delete a replica
+
+	# docker ps -a  // replicas will be displayed
+	# docker rm -f containername  // replica will be deleted
+	
+# docker ps -a
+# docker service ps mywebserver
+
+3. Drain worker1 from the swarm 
+	
+	# docker node ls
+	# docker node update --availability drain Worker1
+
+4. check if all 6 replicas are running on manager and worker2
+ 
+	# docker service ps mywebserver
+	
+	# docker service ps mywebserver | grep Running
+
+5. Make worker1 join the swarm again
+
+        # docker node update --availability active Worker1
+
+6. check if all 6 replicas are running on manager and worker1 and 2
+ 
+	# docker service ps mywebserver
+
+7. we can also go to worker2 git bash and leave the swarm
+	# systemctl start docker
+	# docker swarm leave
+
+
+8.Connect back to manager
+
+# docker node ls
+
+worker 2 will be in status down and Active
+
+9. Remove the worker2 node from the swarm
+
+	# docker node rm Worker2
+
+Worker 2 will not be in swarm now.
+
+	# docker node ls
+
+9.Check if all the replicas are still running or not.
+
+	# docker services ps webserver
+
+10. join back the worker2 to swarm
+
+	# docker swarm join-token worker
+
+copy the token and paste it on worker 2 machine
+
+docker swarm join --token SWMTKN-1-195rkd1a6332n2izpccyfn9d29q1mqs72ja0d4ueo63xyetrum-6t7d8m9tfcw9qtj86ske56p0q 172.31.44.159:2377
+
+Worker2 will join the swarm again
+
+on Manager machine:  # docker node ls   // worker 2 will be active and running
+
+**********************************************************
+ROLLING UPDATE/ ROLLING OUT:
+*************************************************************
+
+Create redis:3 with 5 replicas and update it to redis:4 and latter roll it back to redis:3
+
+1.Create redis:3 with 5 replicas
+
+# docker service create --name myredis --replicas 5 redis:3
+
+2.Check if 5 replicas are running or not
+
+Docker service ps myredis
+
+3.perform a rolling update from redis:3 to redis:4
+
+# docker service update --image redis:4 myredis
+
+4.Check if 5 replicas of redis:3 are shutdown and redis:4 are up and running
+
+# docker service ps myredis
+
+5.Perform roll back from redis:4 to redis:3
+
+# docker service update --rollback myredis
+
+6.Check if 5 replicas of redis:4 are shutdown and redis:3 are up and running
+
+# docker service ps myredis
+
+*****************************************************
+
+OVERLAY NETWORK
+
+****************************************************
+
+Create 1 custom overlay networks overlay1 
+
+Usecase 1: Create a tomcat service in swarm on overlay1 network
+
+
+1.Create 1 overlay network
+
+
+# docker network create --driver overlay overlay1
+
+2. Check if the networks are created or not
+
+# docker network ls
+
+3. Start tomcat service with 3 replicas on overlay1 network
+
+# docker service create --name mytomcat -p 8888:80 replicas 3 --network overlay1 tomcat
+
+4. Check if tomcat service is running on overlay1 network
+
+# docker service inspect mytomcat
+OR
+
+# docker service inspect mywebserver --pretty
+
+
+In network you will see netwrok to be overlay1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
