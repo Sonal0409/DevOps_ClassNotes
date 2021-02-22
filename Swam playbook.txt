@@ -1,0 +1,35 @@
+- hosts: docker-manager-first
+  remote_user: root
+  become: yes
+  tasks:
+  - name: "create primary swarm manager"
+    shell: docker swarm init --advertise-addr {{ipaddress }}
+
+  - name: "get docker swarm manager token"
+    shell: docker swarm join-token -q manager
+    register: manager_token
+
+  - name: "get docker swarm worker token"
+    shell: docker swarm join-token -q worker
+    register: worker_token
+
+- hosts: docker-managers
+  remote_user: root
+  become: yes
+  tasks:
+  - name: "join as a manager"
+    shell: "docker swarm join --token {{ hostvars['manager1']['manager_token']['stdout'] }} {{ hostvars['manager1']['ansible_eth0']['ipv4']['address'] }}:2377"
+    when: docker_info.stdout.find("Swarm{{':'}} inactive") != -1
+    retries: 3
+    delay: 20
+
+- hosts: docker-workers
+  remote_user: root
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: "join as a worker"
+    shell: "docker swarm join --token {{ hostvars['manager1']['worker_token']['stdout'] }} {{ hostvars['manager1']['ansible_eth0']['ipv4']['address'] }}:2377"
+    when: "docker_info.stdout.find('Swarm: inactive') != -1"
+    retries: 3
+    delay: 20
