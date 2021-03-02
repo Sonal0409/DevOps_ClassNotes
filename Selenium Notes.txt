@@ -1,0 +1,127 @@
+selenium webdriver
+
+create maven project
+--> src/main folder
+       --> create a package
+
+          --> create a new class --myfirstTestcase
+
+public class MyfirstTC{
+
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		
+		
+		
+        WebDriver driver = new ChromeDriver();
+		
+		driver.manage().window().maximize();
+		
+		driver.get("https://en.wikipedia.org/w/index.php?title=Special:CreateAccount&returnto=Selenium+%28software%29");
+		
+		Thread.sleep(2000);
+		
+		driver.findElement(By.id("wpName2")).sendKeys("sonal"
+ 
+           //   Now use XPATH to write the locator value.
+
+           // Add wait time
+
+	}
+
+}
+
+
+
+--> create another new class for testNG --> wikitestcase
+
+  public class WikiTestCase {
+
+public static WebDriver driver;
+
+@BeforeClass
+	public static void setup()
+	{
+		
+         System.setProperty("webdriver.chrome.driver", "C:\\Users\\vishal mittal\\Downloads\\chromedriver_win32 (12)\\chromedriver.exe");
+		
+		driver = new ChromeDriver();
+		
+		driver.manage().window().maximize();  // maximize the browser window
+		
+		driver.manage().deleteAllCookies();  // delete cookies on the browser
+		
+	
+		
+		driver.get("https://en.wikipedia.org/w/index.php?title=Special:CreateAccount&returnto=Selenium		+%28software%29");
+	
+		driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+		// implicit wait
+		
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		
+		
+		
+	}
+	@Test(priority='1')
+	public void createAccount() throws InterruptedException
+	{
+		// test steps to perform testcase goes here
+		
+        
+		driver.findElement(By.id("wpName2")).sendKeys("Username1");	
+		
+		Thread.sleep(3000);
+		
+		// Inspect password textbox and enter data in the text box
+		driver.findElement(By.name("wpPassword")).sendKeys("password@123");
+		
+		WebElement e= driver.findElement(By.xpath("//button[@value='Create your account']"));
+		
+		// if we add 
+	
+		Thread.sleep(10000);// waiting until 10 seconds
+		
+		e.click();	
+		
+	}
+	
+@AfterClass
+	public void closebrowser()
+	{
+		driver.close();
+	}
+	
+***********************************************
+
+TestNG.xml
+
+Create folder src/main/resources
+
+Create a file with extension .xml
+
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+  
+<suite name="8PMproject" verbose="1" >
+  <test name="Selenium scripts" >
+    <classes>
+       <class name="packagename.classname" />
+  
+    </classes>
+  </test>
+ </suite>
+
+
+
+Now run the projects as Run As--> MAVEN Test
+
+****************************************************
+
+Upload in git
+
+Show in jenkins.
+
+
+	
+	
+	

@@ -1,0 +1,221 @@
+On NagiosServer:
+
+    1  yum install httpd php gcc glibc glibc-comman gd gd-devel make net-snmp unzip -y
+   3  wget https://sourceforge.net/projects/nagios/files/nagios-4.x/nagios-4.3.2/nagios-4.3.2.tar.gz
+    4  wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+    5  tar -zxvf nagios-4.3.2.tar.gz
+    6  tar -zxpvf nagios-plugins-2.2.1.tar.gz
+    7  useradd nagios
+    8  passwd nagios
+    9  groupadd nagcmd
+   10  usermod -G nagcmd nagios
+   11  usermod -G nagcmd apache
+   12  cd nagios-4.3.2
+   13  ./configure --with-command-group=nagcmd
+   14  make all
+   15  make install
+   16  make install-init
+   17  make install-commandmode
+   18  make install-config
+   19  make install-webconf
+   20  htpasswd -s -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+ //21  vi /usr/local/nagios/etc/objects/contacts.cfg
+   22  systemctl restart httpd
+   23  cd ..
+   24  cd nagios-plugins-2.2.1/
+   25  ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+   26  make
+   27  make install
+   28  /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+   29  systemctl enable  nagios
+   30  systemctl start  nagios
+   31  systemctl restart httpd
+       systemctl restart  nagios
+open the browser http://ip address/nagios
+uid:nagiosadmin(set in the previous steps)
+pwd: 
+
+On Nagios Host (linux):
+    7  rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    8  yum install nrpe nagios-plugins-all -y
+    9  vim /etc/nagios/nrpe.cfg
+In this file, 
+uncomment server address,
+and remove the value for current server adress 
+and add the private ip of you nagios server as 
+Server address=172.31.40.7
+
+add private ip of nagios server under 
+
+allowed_hosts=172.31.40.7
+
+
+   10  systemctl enable nrpe
+   11  systemctl start nrpe
+
+Go to nagios server
+
+In nigios.cfg
+
+# vim nagios.cfg
+uncomment this dire : /usr/local/nagios/etc/servers
+
+etc] # mkdir servers
+] # cd servers/
+# ls
+# cp /usr/local/nagios/etc/objects/localhost.cfg ip-172-31-22-220.us-east-2.compute.internal.cfg
+
+copy the localhost.cfg file from objects directory and create file with name as
+privatehostanameofNagiosHost.cfg
+
+# ls
+
+privatehostanameofNagiosHost.cfg  file will be there. copy it
+
+# vim privatehostanameofNagiosHost.cfg
+
+Inside this file make follwoing chnages:
+Under 
+define host{
+
+add host_name= privatehostname of nagioshost
+alias  = privatehostname of nagioshost
+address = private ip of host
+}
+
+under  chnage linuxservers to linux server
+
+define hostgroup{
+
+hostgroup_name= linuxserver
+alias = linux server
+memeber = privatehostname of nagioshost
+}
+
+in all services definitions change
+host_name= privatehostname of nagioshost
+}
+
+:wq!
+
+# now restart nagios
+
+systemctl restart nagios
+
+go to web view of nagios and see new linux machine is added.
+
+This is how you can monitor a windows and linux machine
+
+Go to HOST machine
+
+*********************************
+
+
+Install docker
+
+# yum install docker -y
+
+# systemctl start docker
+
+# docker run -itd -P nginx
+
+# docker ps 
+
+note the port number
+
+go to browser
+
+public ip of host :portnumber
+
+container created and app running
+
+Now let us monitor this app using nagios
+
+Go to Nagios SERVER
+
+*******************
+
+Go to following location:
+
+servers] # cd..
+objects] # cd..
+etc] # cd ..
+nagios] # ls
+
+# cd libexec
+
+# ls
+
+You will see all the default plugins running
+
+to monitor an application. use the plugin ./check_http
+
+# ./check_http -I 18.222.209.193 -p 32768
+
+# ./check_http -v  // give all options to use with this plugin
+
+# ./check_tcp -H 172.31.44.151 -v -p 8888 -N http://3.21.41.81:8888/addressbook/
+
+// adress book
+
+http://3.21.41.81:8888/addressbook/
+
+
+
+************************************
+
+WINDOWS MACHINE SETUP
+
+***********************************
+
+After installation
+
+go to 
+cd /usr/local/nagios
+ls
+cd etc
+ls
+
+You will see file nagios.cfg
+
+# vim nagios.cfg
+
+Uncomment this line:
+
+# Definitions for monitoring a Windows machine
+cfg_file=/usr/local/nagios/etc/objects/windows.cfg
+
+Now go to objects directory
+
+# cd objects/
+ls
+vim windows.cfg
+
+go to cmd prompt
+ipconfig
+
+ IPv4 Address. . . . . . . . . . . : 192.168.1.4
+
+C:\Users\vishal mittal>hostname
+LAPTOP-N0G0NBDP
+
+
+In the windows.cfg file change 
+
+address = 192.168.1.4
+
+host_name = LAPTOP-N0G0NBDP
+
+
+save the file
+
+# systemctl restart nagios
+systemctl restart httpd
+       systemctl restart  nagios
+
+go to web :http://3.139.73.88/nagios/
+
+hosts
+laptop will be available for monitoring
+
+
