@@ -1,0 +1,28 @@
+We have 2 GIT hub users :
+ 
+User 1: sonal0409
+User 2: sonal04devops
+
+Execute the below steps to see how git fork and clone works.
+
+> Sonal0409 is the owner of a repo - https://github.com/Sonal0409/myprojectmar.git
+
+> sonal04devops is a new developer in her team and he has to implement new features and contribute to the master source code repo.
+
+Here are the steps he needs to follow:
+
+> Fork the repo : of sonal0409.   https://github.com/Sonal0409/myprojectmar.git in his remote repo
+
+> Make a clone of your forked repo on your local machine.
+
+> In that clone, make changes, run tests, create commits etc.
+
+> Push you changes to your forked repo (sonal04devops).
+
+> Issue a pull request to sonal0409, and wait for her to review it.
+
+
+> sonal0409 merges your pull request; your work gets integrated into her GitHub repo. 
+
+Great!Your work was not in vain.
+To save space on GitHub's servers, and if you don't intend to contribute to sonal0409 repo any time soon, you can safely delete your fork.

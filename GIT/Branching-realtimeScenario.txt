@@ -1,0 +1,70 @@
+Lets see the usages of Git Branching with real-world examples including how to create a branch, update it, delete it, switch to another branch, and merge them locally and remotely.
+
+Most of the software projects have two mainstream branches as master and dev.
+
+The master branch is used for ready for production changes and the dev branch is used for testing purposes.
+
+When new changes are tested on the dev branch, eventually it will be merged into the master branch and finally, we will take a deployment on the master branch. 
+
+we should work neither on the master branch nor on the dev branch directly. For every tiny or massive change in a software project, we should first create a new branch from the dev branch by naming the new branch related to our new change.
+
+
+Let me assume that we already have a GitHub repository.
+
+And you can see we have only the “master” branch which is created by default.
+
+Setting Remote and Local Branches
+
+Branch on Remote
+
+But as most software projects have common branches as master and dev. Click on branch section and By typing “dev” and clicking the appeared “Create branch: dev” section, we can create the dev branch on the remote repository.
+
+Create a Branch on Local Repository
+
+git pull origin dev
+
+git branch ==> master and dev branch will be there in local repo
+
+
+Switching branches
+
+Now we are ready for development and just before starting, we need to change our current branch from master to dev by using git command on our local repository.
+
+git checkout dev
+
+The dev branch which will be our main development branch. All development operations will be originated from that branch.
+
+Now Let us create a new branch from the dev branch 
+
+git branch my-bugfix
+
+Now make changes to your branch and commit the changes
+
+push the branch to github
+
+git push origin my-bugfix
+
+After pushing our commit with our new branch, we can check the remote repository from the branches section. You could see the new branch
+
+
+Once you work on branch is complete, you can delete it 
+git branch -D my-new-branch
+
+Delete a branch on Remote repo
+
+git push origin --delete my-bugfix
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
