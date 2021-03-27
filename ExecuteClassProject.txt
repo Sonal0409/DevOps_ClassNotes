@@ -1,0 +1,105 @@
+Steps to implement after class certification Project.
+
+These are just suggestions to implement the project, you can use your own steps to execute the Certification project as per document provided by edureka.
+
+Steps that I suggest:
+
+Create 3 Linux/Ubuntu AWS instances
+
+Take 1 AWS instance and Install:
+
+GIT , JAVA, Maven, Jenkins & Ansible.
+
+making this machine as Ansible Controller Machine and Jenkins Master
+
+Consider the other 2 AWS machines as your Ansible Slaves.
+
+Steps to be executed in GIT:
+
+Create a Repository with following files:
+
+Playbook.yml
+inventory file
+
+*************************
+
+Inventory files:
+******************
+
+Include private ip of both the Ansible slaves.
+
+Steps for creating a playbook:
+*****************************
+Write tasks in plabook for:
+Install docker on both slaves
+Start docker service
+Pull the image devopsedu/webapp given by edureka
+Run the image to create container, do port mapping to access the application from web
+
+If you want you can take the actaul code from git hub , build it using Jenkins(using ANT), create a docker file
+build an image , pusg the image to Docker hub.
+
+
+Steps in Jenkins:
+
+Create new job with pipeline template.
+
+Write code to create a piplelie with different stages:
+
+stage one -> clone the repo form git
+stage two -> Execute the playbook
+
+click on pipeline syntax
+
+Select step as ansible playbook :
+
+Ansible tool : myansible  // will be there by default
+
+Playbook file path in workspace : playbook1.yml    
+// filename of playbookfrom git
+		
+Inventory file path in workspace: dev.inv
+
+SSH connection credentials : 
+
+click on add-->jenkins
+
+select kind : SSH username with private key
+
+id: private-key
+Description: ansible
+Username: ec2-user
+privateKey :
+
+go to downloads folder.. go to the host pem key which is gittoday
+open it with notepad and copy the text
+
+go to jenkins
+click on add button and paste the text
+  clcik on add key at bottom
+
+now at SSH connection credentials : select ec2-user from drop down
+
+Scroll down and check on 		
+ 	Disable the host SSH key check
+
+Clcik on Generate pipeline script
+
+Copy the code and as to your pipeline script.
+
+Save and Build Now.
+
+PART 2:
+
+Once you run the application on the slaves 
+
+Write selenium test cases for the deployed application and push the test cases in git repository.
+
+Go to jenkins master , create a job and run your test cases using maven surefire plugin.
+
+Thanks,
+Sonal
+
+
+
+
