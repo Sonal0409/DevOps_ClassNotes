@@ -2,9 +2,8 @@
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
- name: tomcat-rc
+ name: myrs
  labels:
-  author: edureka
   type: webserver
 spec:
  replicas: 3
@@ -13,10 +12,10 @@ spec:
    type: webserver
  template:
   metadata:
-   name: tomcat-pod
+   name: mypod
    labels:
     type: webserver
   spec:
    containers:
-    - name: mytomcat
-      image: tomcat
+    - name: myn1
+      image: nginx
