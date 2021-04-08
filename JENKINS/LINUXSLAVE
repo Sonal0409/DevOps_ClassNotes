@@ -1,0 +1,29 @@
+LINUX SLAVE
+*************************
+create root directory
+
+cd /tmp
+mkdir jenkisndir
+
+give permission to the directory
+
+sudo chmod -R 777 /tmp/jenkinsdir
+
+Go to master
+*************
+
+Go to node
+
+give following informtion under Launch Method
+
+how to connetc to master- select ssh
+
+host: private ip
+
+provide credentials
+
+also set 
+Host key verfication as:
+Non verifying Verification startegy
+
+save it
