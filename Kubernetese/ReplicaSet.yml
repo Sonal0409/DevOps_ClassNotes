@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+ name: myrs
+ labels:
+  type: webserver
+spec:
+ replicas: 3
+ selector:
+  matchLabels:
+   type: webserver
+ template:
+  metadata:
+   name: mypod
+   labels:
+    type: webserver
+  spec:
+   containers:
+    - name: myn1
+      image: nginx
