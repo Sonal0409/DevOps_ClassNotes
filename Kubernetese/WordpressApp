@@ -1,0 +1,166 @@
+---
+kind: PersitentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-volumeclaim
+spec: 
+  accessMode:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Gi
+ 
+ #Here we are just making a claim for 200GB Volume in Read-write mode
+#The volume will be provisioned first, and then it will be claimed by our MySQL pod
+# Now we can create deployment file for our MySQL pod
+
+
+---
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-volumeclaim
+            
+Here we are only creating a single replica, so we don’t have any issue with our read-write volume
+We are passing a Environment variable in our MySQL container for its root password using a secret object.
+Now, if you look at our mysql-deployment.yaml you can see we are associating our persistent volume object with this deployment and then mounting it inside the MySQL container
+
+Now we will create mysql-service.yaml
+This will create an internal service to access our MySQL deployment
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  lables:
+    app: mysql
+  spec:
+    type: ClusterIP
+    ports:
+      - port: 3306
+    selector:
+      app: mysql
+      
+We will create a persistent volume claim for our Wordpress Application
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: wordpress-volumeclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Gi
+
+
+create a deployment.yaml for Wordpress application.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+        - image: wordpress
+          name: wordpress
+          env:
+          - name: WORDPRESS_DB_HOST
+            value: mysql:3306
+          - name: WORDPRESS_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: password
+          ports:
+            - containerPort: 80
+              name: wordpress
+          volumeMounts:
+            - name: wordpress-persistent-storage
+              mountPath: /var/www/html
+      volumes:
+        - name: wordpress-persistent-storage
+          persistentVolumeClaim:
+            claimName: wordpress-volumeclaim
+            
+  
+  #create a service definition to expose our Wordpress Application for the outside world
+  
+  ---
+  
+  apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wordpress
+  name: wordpress
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: wordpress
+    
+
+
+kubectl apply -f mysql-volumeclaim.yaml -f wordpress-volumeclaim.yaml
+kubectl get pvc
+kubectl create secrete generic mysql --from-literal=password=YOURPASSWORD 
+kubectl apply -f mysql-deployments.yaml -f mysql-service.yaml
+kubectl get pods
+kubectl get svc
+kubectl apply -f wordpress-deployment.yaml -f wordpress-serice.yaml
+kubectl get pods
+kubectl get svc
+
+You will get public IP for your Wordpress blog copy it and past it in a new tab of browser.And you get the Wordpress initial setup tour something like this.
+
+Thanks.

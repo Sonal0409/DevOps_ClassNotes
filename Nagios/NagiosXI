@@ -1,0 +1,199 @@
+NAGIOS XI
+
+Create a virtual machine with 4GB ram on GCP
+
+Install docker on it
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update ; clear
+sudo apt-get install -y docker-ce
+sudo service docker start
+
+RUN the below image to create a container for nagiosxi
+
+docker run -d -p 80:80 --name nagiosxi lerndevops/nagios:xi5.5.6
+
+It is a heavy image, it will take time to create the container
+
+take externalip:80 to access nagiosxi frontend
+> click on access nagiosxi
+> set the timezone to new delhi
+> press next
+> USername=> nagiosadmin
+> password => nagiosadmin
+> give email address
+
+> click finish install
+
+> Click on login to Nagios XI
+> give username : nagiosadmin
+  password as nagiosadmin
+
+> agree on agreement and click on submit
+
+On host summary you will see 1 host, that it is monitoring itself
+
+Setup complete.
+
+Scenario 1: monitor a lInux host
+***************************
+
+for nagios server to monitor any other host machine, we have to first make chnages on the host machine
+we have to install NRPE plugin on the linux slave/host machine
+
+For that :
+
+go to configure --> configure wizards --> select linux server
+
+provide external ip of slave VM
+
+select os as ubuntu
+
+press next
+
+Click on Agent installation instructions
+
+Execute following steps from the document
+
+Installing The Agent
+Download the Linux NRPE agent to the /tmp directory on the Linux server you wish to monitor.
+cd /tmp
+wget https://assets.nagios.com/downloads/nagiosxi/agents/linux-nrpe-agent.tar.gz
+Unpack the installation archive you just downloaded:
+tar xzf linux-nrpe-agent.tar.gz
+Enter the newly created agent subdirectory:
+cd linux-nrpe-agent
+
+Run the wrapper script as root (if using Ubuntu you'll need to either run sudo -i to run as root or run the
+command with sudo in front):
+./fullinstall
+
+It will take some time to update
+
+
+Go back to nagios xi
+
+configure wixard--> linux server--> give details--press next --
+
+explain monitoring settings
+
+
+ALLOW FROM on VM2
+give as : 0.0.0.0/0   ==> give all addresses
+
+Agent/slave set up is done
+
+Go to nagios xi front end and click on finish
+
+go to HOME
+
+2 host will be avialble now
+
+click on the new google host
+
+on right side you can generate report, send email
+you can group the servers als
+
+
+***********************
+
+Scenario2:
+
+Service level monitoring
+
+Go to slave machine and install nginx server onit, not container, its webserver we are installing
+
+# apt-get install nginx -y
+
+# ps -ef|grep nginx
+
+will give nginx is up and running
+
+this nginx service we want to monitor from nagiosxi
+
+for this
+
+go to configure wizrd--> select service tcp/UDP port
+
+Server address :   give ip address of slave server where nginx is running
+
+server port : http
+
+Custom server port : 
+
+port number : 80
+port/application name : nginx webserver
+press next
+press finsih
+
+
+it will take time to reflect
+
+Scenario3: bring down nagios webserver and see if really the data and service are being monitored or not
+
+Go to VM2 --slave machine and stop nginx server
+
+# service nginx stop
+
+now got o nagiosxi and click on service nginx webserver
+
+
+Click on force immediate check
+
+status will be Critical
+
+Click on acknowledge this problem
+
+you name and time will be given
+
+This is port level monitoring or service level monitoring
+
+***********
+
+Service 4: Monitor a URL
+
+got o configure wizard --> select website URL
+
+give url as www.google.com
+
+press next
+
+
+we will check the url status here
+
+clcik on fisinsh
+
+go to home and see 3 hosts will be there
+
+you can also configure your url also for monitoring firends
+
+**********
+
+Go to reports section on top.. you can schedule reports also , send reports
+download pdf format of reports
+send as email
+
+
+You cna also create dashboards
+manage dashlets to see specific data
+
+
+
+
+
+
+
+
+
+
+
+click on finish
+
+
+
+
+
