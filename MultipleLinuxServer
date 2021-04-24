@@ -146,7 +146,24 @@ You can also connect QA and prod jobs to get executed one after the other. This 
 
 
 
+************************************
 
+Parameters
+In order to support the wide variety of use-cases Pipeline authors may have, the agent section supports a few different types of parameters. These parameters can be applied at the top-level of the pipeline block, or within each stage directive.
+
+any
+Execute the Pipeline, or stage, on any available agent. For example: agent any
+
+none
+When applied at the top-level of the pipeline block no global agent will be allocated for the entire Pipeline run and each stage section will need to contain its own agent section. For example: agent none
+
+label
+Execute the Pipeline, or stage, on an agent available in the Jenkins environment with the provided label. For example: agent { label 'my-defined-label' }
+
+Label conditions can also be used. For example: agent { label 'my-label1 && my-label2' } or agent { label 'my-label1 || my-label2' }
+
+node
+agent { node { label 'labelName' } } behaves the same as agent { label 'labelName' }, but node allows for additional options (such as customWorkspace).
 
 
 
