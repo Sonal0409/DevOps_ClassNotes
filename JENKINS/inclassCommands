@@ -1,0 +1,38 @@
+  267  git --version
+  268  alternatives --config java
+  269  pwd
+  270  clear
+  271  yum install java-1.8.0-openjdk-devel
+  272  clear
+  273  alternatives --config java
+  274  vim /etc/profile
+  275  source /etc/profile
+  276  echo $JAVA_HOME
+  277  clear
+  278  yum install maven -y
+  279  clear
+  280  mvn --version
+  281  vim /etc/profile
+  282  source /etc/profile
+  283  echo $MAVEN_HOME
+  284  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+  285   sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  286  yum install jenkins -y
+  287  clear
+  288  systemctl start jenkins
+  289  systemctl status jenkins
+  290  cat /var/lib/jenkins/secrets/initialAdminPassword
+  291  ls
+  292  clear
+  293  cd /var/lib/jenkins/workspace
+  294  ls
+  295  job1
+  296  cd job1
+  297  ls
+  298  cd ..
+  299  ls
+  300  cd clone
+  301  ls
+  302  cat fileJenkins
+  303  cd
+  304  history
