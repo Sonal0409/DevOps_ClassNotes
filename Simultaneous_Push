@@ -1,0 +1,32 @@
+How git works when two contributors push changes/commits to same remote simultaneously
+
+
+Yes, one of the pushes will be rejected - whichever one is later, even if it's just by a microsecond, as Jefromi mentions in his comment. However, it will be rejected because the remote repository sees that the history of the later push doesn't include the history of the earlier one, rather than because it sees any conflict in the content that's being pushed.
+
+More detailed answer
+Usually a push will be rejected if it wouldn't "fast-forward" the branch, in Git terminology. This means that if your master is at A and the remote repository's is at B, then the push will only succeed if B is an ancestor of A. (I say "usually" because you can add options to "force" the push if the remote repository allows that, but that's not the typical case.)
+
+In the case you describe, supposing all three repositories initially have the same history:
+
+P -- Q -- R
+And you have added a commit S:
+
+P -- Q -- R -- S
+... while someone else has added a commit T:
+
+P -- Q -- R -- T
+If that other person gets there first when pushing (that is, Git on the server handles their push first), then their push will be accepted because R is an ancestor of T, so the remote repository will then also have the history P -- Q -- R -- T. If you subsequently try to push, you will get an error because T is not an ancestor of S. Typically, on seeing that ! [rejected] error you will either run git pull or git pull --rebase to make sure that you are ahead of master in the remote repository.
+
+git pull will create a merge commit M to make your history look like:
+
+P -- Q -- R -- T -- M
+           \       /
+            -- S -
+... while git pull --rebase will reapply the changes that you introduced on top of T to create a new commit, S':
+
+P -- Q -- R -- T -- S'
+In either of those cases, you should be able to push again, because T is an ancestor of both M and S'. (That is assuming no one else has pushed again in the mean time!)
+
+By only allowing fast-forwards there never has to be resolution of conflicts on the remote side - if there are any conflicts, you'll be prompted to resolve them locally when you run git pull.
+
+It might be worth noting that the update applied to the remote repository in response to a push is atomic, so in the example situation we've described above where S and T are being pushed at the same time, it will always be the case that one of them is completely applied while the other one will fail, having not effect.
