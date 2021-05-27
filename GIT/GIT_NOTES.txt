@@ -406,6 +406,15 @@ Create a new file on external repo
 # git pull remotebranch localbranchname
 # ls    //All files will be there in local as same as remote
 
+Fetch only specific file from remote Master branch
+**********************************************
+
+# git fetch --all
+
+# git checkout origin/<branch_name> -- fileName
+
+# git checkout origin/master -- fileDave
+
 Conflicts in external and local repo.
 *****************************************
 Create a file in remote repo file5.txt ==> add text
