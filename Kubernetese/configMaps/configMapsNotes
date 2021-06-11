@@ -1,0 +1,45 @@
+ # kubectl get configmap
+ 
+ # kubectl create configmap dev-config --from-literal=app.mem=2048m
+ 
+ # kubectl get configmap
+ 
+ # kubectl get configmap dev-config -o yaml
+ # vim dev.properties
+app.env:dev
+app.mem=2048m
+app.properties=dev.env.url
+:wq!
+
+# kubectl create configmap dev-config1 --from-file=dev.properties
+# kubectl get configmap
+# kubectl get configmap dev-config1 -o yaml
+
+Use configmap for a pod
+
+vim pod-configmap.yml
+
+kind: Pod
+apiVersion: v1
+metadata:
+ name: pod-configmap
+spec:
+ containers:
+  - image: nginx
+    name: c1
+    volumeMounts:
+     - name: config-volume
+       mountPath: /etc/config
+ volumes:
+  - name: config-volume
+    configMap:
+     name: dev-config1
+ restartPolicy: Never
+ 
+ :wq!
+ 
+ # kubectl apply -f pod-configmap.yml
+ # kubectl exec -it pod-configmap bash
+ # cd /etc/config
+ 
+ you will find the dev.properties file and configurations
