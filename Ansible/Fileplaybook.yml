@@ -1,0 +1,9 @@
+ - hosts: webserver
+   become: true
+   become_user: root
+   tasks:
+   - name: Create a file
+     file: path=/tmp/{{item}} state=directory
+     with_items:
+      - dir1
+      - dir2
