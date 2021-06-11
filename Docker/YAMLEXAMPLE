@@ -1,0 +1,49 @@
+XML example:
+
+<edureka>
+ <devops>
+  <name>devops-certification</name>
+  <duration>36hrs</duration>
+  <trainer>John</trainer>
+ </devops>
+ <selenium>
+  <name>selenium-certification</name>
+  <duration>36hrs</duration>
+  <trainer>Dave</trainer>
+ </selenium>
+</edureka>
+
+
+---
+
+edureka:
+ devops
+  name: devops-certification
+  duration: 36hrs
+    day: weekday
+  trainer: john
+ selenium 
+  name: devops-certification
+  duration: 36hrs
+    day: weekend
+  trainer: john
+
+
+...
+
+
+
+
+---
+edureka:
+ devops: 
+  name: devops-certification
+  duration: 36hrs
+  trainer: John
+ selenium:
+  name: selenium-certification
+  duration: 36hrs
+  trainer: Dave
+
+
+Validate by going to http://www.yamllint.com/

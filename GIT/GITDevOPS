@@ -1,0 +1,145 @@
+Create a Server for Devloper1
+Install git on it
+
+Go to Git hub and create a repository with readme file added
+
+there will be a defualt main branch
+
+Create 3 more branches Dev, QA, Prod
+
+Make Dev branch as defualt branch
+
+Go to Settings--> Branches--> click on switch to other branches--> select dev in drop down and click on update
+
+Now dev is default branch
+
+And delete main branch
+
+go to local machine of Developer and Clone the git hub repository
+
+Dev branch must be there.
+
+Create a new file with index1.html and save it
+  
+<h1> this my app </h1>
+<h1> created by Sonal</h1>
+
+Add file to local repo and push the code to Remote repo under dev branch
+
+# git add .
+# git commit -m "added index1.html"
+# git push origin Dev
+
+Check in github under Dev do we have the file
+
+Now Build and Deploy the code using Jenkins & Docker
+
+Go to jenkins--> DeployDev Job
+give the new repo name and branch name as Dev
+
+under build give this script
+
+rm -rf mydockerfile
+mkdir mydockerfile
+cd mydockerfile
+cp /var/lib/jenkins/workspace/DeployDev/index1.html .
+touch dockerfile
+cat <<EOT>> dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install nginx -y
+COPY index1.html /var/www/html
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+EOT
+sudo docker build -t myimage:$BUILD_NUMBER .
+sudo docker run -itd -P myimage:$BUILD_NUMBER
+
+
+Code will be deployed at URL : http://3.143.147.140:32776/index1.html
+
+
+********************************************
+
+Now go to Git hub and create pull request to merge code with QA branch
+
+Now Build and Deploy the code using Jenkins & Docker
+
+Go to jenkins--> DeployQA Job
+give the new repo name and branch name as QA
+
+under build give this script
+
+rm -rf mydockerfile
+mkdir mydockerfile
+cd mydockerfile
+cp /var/lib/jenkins/workspace/DeployQA/index1.html .
+touch dockerfile
+cat <<EOT>> dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install nginx -y
+COPY index1.html /var/www/html
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+EOT
+sudo docker build -t myimage:$BUILD_NUMBER .
+sudo docker run -itd -P myimage:$BUILD_NUMBER
+
+
+Code will be deployed at URL : http://3.143.147.140:32776/index1.html
+
+
+As there will be defects , go to local repo and make chnages to index1.html for defect fix as part of QA
+
+Push the code to Dev branch first
+
+Build and Deploy in DEV Server
+
+Now merge DEV code to QA branch in deploy in QA
+
+*************************************
+
+Once everything is tested in QA, 
+
+Create a pull request to merge QA branch to Prod branch
+
+
+Now Build and Deploy the code using Jenkins & Docker
+
+Go to jenkins--> DeployProd Job
+give the new repo name and branch name as Prod
+
+under build give this script
+
+rm -rf mydockerfile
+mkdir mydockerfile
+cd mydockerfile
+cp /var/lib/jenkins/workspace/DeployProd/index1.html .
+touch dockerfile
+cat <<EOT>> dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install nginx -y
+COPY index1.html /var/www/html
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+EOT
+sudo docker build -t myimage:$BUILD_NUMBER .
+sudo docker run -itd -P myimage:$BUILD_NUMBER
+
+
+Code will be deployed at URL : http://3.143.147.140:32776/index1.html
+
+
+
+
+
+
+
+
+
+
+
+
+

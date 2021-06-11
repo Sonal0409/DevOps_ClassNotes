@@ -1,0 +1,140 @@
+==> Create mysql container
+
+docker run --name mysql57 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 -d mysql/mysql-server:5.7
+
+Container will be created successfully
+
+Create a data base now:
+
+# docker exec -it mysql57 bash
+
+This command access the mysql container and allow to execute commands on database. 
+
+Inside a container, type:
+
+# mysql -h localhost -u root -p
+
+Remember, the password is 1234. First, we need to create a user for out-of-container access because root access is not allowed:
+
+
+CREATE USER 'demo_java' IDENTIFIED BY 'java';
+grant all on *.* to 'demo_java'@'%' identified by '1234';
+FLUSH PRIVILEGES;
+
+To create a database, paste DDL bellow:
+
+CREATE DATABASE hello_java CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+show databases;
+
+you can see hello_java db
+
+use hello_java
+
+Create tables and insert rows in the DB
+
+CREATE TABLE Customers (CustomerName varchar(20),ContactName varchar(255),Address varchar(255),City varchar(255),PostalCode varchar(255),Country varchar(255)
+);
+
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('John', 'Tom B', 'Skagen', 'Stava', '40', 'USA');
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('CardinalJohn', 'Erichsen', 'S21', 'Stech', '4045', 'Belgium');
+
+
+select * from Customers;
+
+
+OR
+
+Another way to start a database and automatic create a hello_java database and demo_java user:
+
+docker run --name mysql57 -p 3306:3306 \
+-e MYSQL_ROOT_PASSWORD=1234 \
+-e MYSQL_USER=demo_java \
+-e MYSQL_PASSWORD=1234 \
+-e MYSQL_DATABASE=hello_java \
+-d mysql/mysql-server:5.7
+
+And repeat above steps for table and row creation.
+
+
+Now steps to access db from eclipse
+
+
+Create a maven project and add dependency in the pom.xml file
+
+  <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>6.0.6</version>
+</dependency>
+
+Create a class
+
+package com.qa.dbTest;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DbtestDemo {
+
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		
+		Connection con = DriverManager.getConnection("jdbc:mysql://34.71.212.58:3306/hello_java","demo_java", "1234");
+		
+/*		String driver="com.mysql.cj.jdbc.Driver";
+		
+		String userName="demo_java";
+		String password="1234";
+		Class.forName(driver).newInstance();
+		
+		con=DriverManager.getConnection(dburl, userName, password);*/
+		System.out.println("connection established successfully");
+			
+		Statement st= con.createStatement();
+		
+		ResultSet rs= st.executeQuery("select * from Customers");
+		
+		while(rs.next())
+		{
+			System.out.println("CustomerName: " + rs.getString("CustomerName"));
+		}
+		rs.close();
+
+	}
+
+}
+
+Execute the class.. Connection to you DB will be successfull.
+
+package com.qa.dbTest;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class InsertData {
+
+	public static void main(String[] args) throws SQLException {
+		// TODO Auto-generated method stub
+		Connection con = DriverManager.getConnection("jdbc:mysql://34.123.119.97:3306/hello_java","demo_java", "1234");
+		
+		System.out.println("connection established successfully");
+				
+        PreparedStatement ps = con.prepareStatement("INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)\r\n" + 
+        		"VALUES ('Sonal2', 'Vishal2', 'S21245', 'Stecsdfsdh', '4045', 'Gurgaon')");
+	ps.executeUpdate();
+	con.close();
+	}
+
+}
+
+
+

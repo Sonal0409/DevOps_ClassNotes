@@ -1,0 +1,166 @@
+Docker Stack
+
+This is used for creating a muiltcontainer architecture using docker compose and deploy it in the swarm cluster.
+
+Docker compose + swarm = docker stack.
+
+
+
+Commands
+
+1.To see list of stack
+
+# docker stack ls
+
+2.To create a stck
+
+# docker stack deploy -c stack_filename/docker_composefilename stackname
+
+3.To see list of nodes where the stack service is running
+
+# docker stack ps stackname
+
+4.To see list of services in docker stack
+
+# docker stack service stack_name
+
+5.To delete a stck
+
+# docker stack rm stack_name
+
+
+Example:
+
+Create a directory==>goinside the directory
+
+Create a yml file ==> vim stack1.yml
+
+---
+version: 3
+
+services:
+ mydb:
+  image: mysql:5
+  environment: 
+   MYSQL_ROOT_PASSWORD: edureka
+
+ myworsdpress:
+  image: wordpress
+  ports:
+   -5050:80
+  deploy:
+   replicas: 3
+...
+
+To deploy the stack service
+
+# docker stack deploy -c stack1.yml wordpress
+
+Here -c : allows you to create docker compose file with any name
+
+3.To see where the stack replicas are running
+
+# docker stack ps wordpress
+
+3 replicas of wordpress and 1 mysql replica will be created
+
+4.To remove the stack
+
+# docker stack rm wordpress
+
+Example2:
+
+Starting a jenkins linked with 2 tomcat servers, creating a stack file and adding details like no: of replicas and which service to run on which node
+
+# vim stack2.yml
+---
+version: 3
+
+services:
+ jenkins:
+  image: jenkins
+  ports:
+   -5050:8080
+  deploy:
+   replicas: 2
+   placement:
+    constraints:
+     -node.hostname == Manager
+ 
+ qaserver:
+  image: tomcat
+  ports:
+   -6060:8080
+  deploy:
+   replicas: 2
+   placement:
+    constraints:
+     -node.hostname == Worker1
+ 
+ prodserver:
+  image: tomcat
+  ports:
+   -7070:8080
+  deploy:
+   replicas: 3
+   placement:
+    constraints:
+     -node.hostname == Worker2
+ 
+…
+
+:wq!
+
+# docker stack deploy -c stack2.yml stack-ci-cd
+
+# docker stack ps stackci-cd
+
+So all the replicas will be created will be running on thesre respective manager, worker 1 and worker 2 node as mentioned in stack file
+
+Here under constraints we have give 1 node, but if you want we can give more than 1 node also, so if one node is not available then the service will start running on another node.
+If in conatraint you have given only 1 node, then if the node is out of resources or is down, then the services will wait until that node comes alive again.
+
+Example2: Advance:
+Create a docker stack file to setup the selenium testing environment and also put an upper limit on the h/w allocation
+
+---
+version: '3'
+services:
+ hub:
+  image: selenium/hub
+  ports:
+   -4444:4444
+  deploy:
+   replicas: 1
+   resources:
+    limits:
+     cpus: "0.1"
+     memory: "200M"
+ chrome:
+  image: selenium/node-chrome-debug
+  ports: 
+   -5901:5900
+  deploy:
+   replicas: 2
+   resources:
+    limits:
+     cpus: "0.01"
+     memory: "100M"   
+
+firefox:
+ image: selenium/node-firefox-debug
+ ports: 
+  -5901:5900
+ deploy:
+   replicas: 1
+
+… 
+
+2.To deploy the services from above stack file:
+
+# docker stack deploy -c stack3.yml selenium
+
+3.View the services
+
+# docker stack ps selenium
+

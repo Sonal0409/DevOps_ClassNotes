@@ -1,0 +1,170 @@
+Source code for WebCalculator app is at
+
+https://github.com/Sonal0409/JavaWebCalculator.git
+
+
+Create 2 new ec2-instance and name them as QAServer & prodServer.
+
+Go to Jenkins Master (name: GIT30MAR)
+
+Connect master to QAServer
+Connect master to prodServer
+
+Follow the below steps:
+
+LINUX SLAVE
+*************************
+create root directory
+
+cd /tmp
+mkdir jenkisndir
+
+give permission to the directory
+
+sudo chmod -R 777 /tmp/jenkinsdir
+
+Go to master
+*************
+
+Go to node
+
+give following informtion under Launch Method
+
+how to connect to master- select ssh
+
+host: private ip
+
+provide credentials
+
+also set 
+Host key verfication as:
+Non verifying Verification startegy
+
+Save it.
+
+***************************
+
+Create a new pipeline job : QApipelineJob
+
+Write the following pipeline as code and give Agent label as qa_Server
+
+pipeline{
+    
+     tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent {label 'qa_Server'}
+    stages{
+        stage('checkout'){
+            steps{
+               git branch: 'qa', url: 'https://github.com/sonal04devops/JavaWebCalculator.git'
+            }
+        }
+         stage('Compile'){
+              
+              steps{
+                  echo 'compiling..'
+                  sh 'mvn compile'
+	      }
+          }
+          stage('UnitTest'){
+               
+              steps{
+                  sh 'mvn test'
+              }
+               post {
+               success {
+                   junit 'target/surefire-reports/*.xml'
+               }
+           }	
+          }
+          stage('Package'){
+        
+              steps{
+                  sh 'mvn package'
+              }
+          }
+          
+}
+}
+
+Save the job and Build the job
+*************************************************
+
+Create a new pipeline job : QApipelineJob
+
+Write the following pipeline as code and give Agent label as prod_Server
+
+pipeline{
+    
+     tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent {label 'prod_server'}
+    stages{
+        stage('checkout'){
+            steps{
+               git 'https://github.com/sonal04devops/JavaWebCalculator.git'
+            }
+        }
+         stage('Compile'){
+              
+              steps{
+                  echo 'compiling..'
+                  sh 'mvn compile'
+	      }
+          }
+          stage('UnitTest'){
+               
+              steps{
+                  sh 'mvn test'
+              }
+               post {
+               success {
+                   junit 'target/surefire-reports/*.xml'
+               }
+           }	
+          }
+          stage('Package'){
+        
+              steps{
+                  sh 'mvn package'
+              }
+          }
+          
+}
+}
+
+******************************************************
+
+Otherwise you can create Jenkins files with pipeline code in respective branches (Master & QA) and then execute the Job in Jenkins.
+
+You can also connect QA and prod jobs to get executed one after the other. This will be automatic triggering of prodServer job.
+
+
+
+
+
+*******************************************
+
+Parameters
+In order to support the wide variety of use-cases Pipeline authors may have, the agent section supports a few different types of parameters. These parameters can be applied at the top-level of the pipeline block, or within each stage directive.
+
+any
+Execute the Pipeline, or stage, on any available agent. For example: agent any
+
+none
+When applied at the top-level of the pipeline block no global agent will be allocated for the entire Pipeline run and each stage section will need to contain its own agent section. For example: agent none
+
+label
+Execute the Pipeline, or stage, on an agent available in the Jenkins environment with the provided label. For example: agent { label 'my-defined-label' }
+
+Label conditions can also be used. For example: agent { label 'my-label1 && my-label2' } or agent { label 'my-label1 || my-label2' }
+
+node
+agent { node { label 'labelName' } } behaves the same as agent { label 'labelName' }, but node allows for additional options (such as customWorkspace).
+
+
+

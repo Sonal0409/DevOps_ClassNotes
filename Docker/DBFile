@@ -1,0 +1,14 @@
+CREATE TABLE Customers (CustomerName varchar(20),ContactName varchar(255),Address varchar(255),City varchar(255),PostalCode varchar(255),Country varchar(255)
+);
+
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('John', 'Tom B', 'Skagen', 'Stava', '40', 'USA');
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('CardinalJohn', 'Erichsen', 'S21', 'Stech', '4045', 'Belgium');
+
+
+select * from Customers;
+
+exit
