@@ -9,4 +9,4 @@ spec:
  accessModes:
   - ReadWriteOnce
  hostPath:
-  path: /tmp/data
+  path: /home/mittal_sonal04/pvlabs
