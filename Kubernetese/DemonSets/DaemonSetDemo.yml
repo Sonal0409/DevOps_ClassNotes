@@ -3,7 +3,8 @@ kind: DaemonSet
 metadata:
  name: myds
 spec:
- selector:  matchLabels:
+ selector:  
+  matchLabels:
     type: webserver 
  template:
   metadata:   
