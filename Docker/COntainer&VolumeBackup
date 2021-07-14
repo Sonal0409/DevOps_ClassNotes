@@ -1,0 +1,23 @@
+Backup the data volume from the data container named data-container-to-backup
+
+docker run --rm --volumes-from data-container-backup --name tmp-backup -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /folderToBackup
+Expand this tar file into a new container so we can commit it as part of its image
+
+docker run -d -v $(pwd):/backup --name data-backup ubuntu /bin/sh -c "cd / && tar xvf /backup/backup.tar"
+Commit and push the image with a desired tag ($VERSION)
+
+docker commit data-backup repo/data-backup:$VERSION
+docker push repo/data-backup:$VERSION
+Finally, lets clean up
+
+docker rm data-backup
+docker rmi $(docker images -f "dangling=true" -q)
+Now we have an image named data-backup in our repo that is simply a filesystem with the backup files and folders. In order use this image (aka restore from backup), we do the following:
+
+Run the data container with the data-backup image
+
+run -v /folderToBackup --entrypoint "bin/sh" --name data-container repo/data-backup:${VERSION}
+Run your whatEver image with volumes from the data-conainter
+
+docker run --volumes-from=data-container repo/whatEver
+Thats it.
