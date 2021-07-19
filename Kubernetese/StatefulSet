@@ -1,0 +1,36 @@
+STATEFULL SETS
+
+First create service -ClusterIP with spec set as clusterIP NONE
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: svc-hl-kubetrain
+spec:
+ clusterIP: None
+ selector:
+  tag: label-sts-kubetrain
+  
+
+STEP 2:
+
+Create the StatefulSet YAML file
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: sts-kubetrain
+spec:
+ replicas: 3
+ serviceName: svc-hl-kubetrain
+ selector:
+  matchLabels:
+   tag: label-sts-kubetrain
+ template:
+  metadata:
+   labels:
+    tag: label-sts-kubetrain
+  spec:
+   containers:
+    - image: httpd
+      name: c1

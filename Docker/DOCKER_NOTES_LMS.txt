@@ -98,7 +98,7 @@ Delete all container
 
 docker rm -f $(docker ps -aq)
 
-
+docker system prune --all
 ***************************************************
 Command line containers
 

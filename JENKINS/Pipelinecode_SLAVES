@@ -1,0 +1,51 @@
+pipeline{
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent none
+    stages{
+        stage('clone repo'){
+            agent any
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+                }
+        }
+        stage('Compile'){
+            agent {label 'Linux_Slave'}
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn compile'
+                }
+        }
+        stage('CodeReview'){
+             agent {label 'Linux_Slave'}
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn pmd:pmd'
+                }
+        }
+        stage('Unit Test'){
+               agent {label 'win_slave'}
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              bat 'mvn test'
+                }
+        }
+     stage('CodeCoverage'){
+           agent {label 'win_slave'}
+            steps{
+          
+            bat 'mvn cobertura:cobertura -Dcobertura.format=xml'
+                }
+        }
+             stage('Packge'){
+                 agent {label 'Linux_Slave'}
+            steps{
+                
+              sh 'mvn package'
+                }
+        }
+    }
+}
