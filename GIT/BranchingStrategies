@@ -1,0 +1,64 @@
+My project Experience 1:
+*************************
+
+The workflow we use is one of many branches. Our structure is thus:
+
+Master is golden; only the merge master touches it (more on this in a bit).
+
+There is a dev branch, taken initially from master, that all devs work off. Instead of having a branch per developer, we make feature, or ticket, branches from dev.
+
+For every discreet feature (bug, enhancement, etc.), a new local branch is made from dev. Developers don't have to work on the same branch, since each feature branch is scoped to only what that single developer is working on. This is where git's cheap branching comes in handy.
+
+Once the feature is ready, it's merged locally back into dev and pushed up to the cloud (Bitbucket, Github, etc.). Everyone keeps in sync by pulling on dev often.
+
+We are on a weekly release schedule, so every week, after QA has approved the dev branch, a release branch is made with the date in the name. That is the branch used in production, replacing last week's release branch.
+
+Once the release branch is verified by QA in production, the release branch is merged back into master (and dev, just to be safe). This is the only time we touch master, ensuring that it is as clean as possible.
+
+This works well for us with a team of 12.
+
+
+
+My Project Experience 2:
+*****************************
+
+what we do here while multiple developers working on the same project (even sometimes working on the same controllers/models/views).
+
+First of all our team-lead created git-project with two branches
+
+Master (it is protected one, no one can push here except team-lead)
+Development (all developers can push here)
+They told us to work on our local environment and create commits whenever we completed one of assigned task(s).
+
+Now in the evening-time (or say closing time - leaving), we do this :
+
+Git Pull
+Every developer that are working on the same project Pull current development branch to their local (do same in morning - when starting for day).
+
+Then team-lead told developer to commit all codes and push one by one followed by one pull.
+
+For ex.
+
+dev1 creates commit and pushes to server
+dev2 pulls again and creates commit and push
+dev3 pulls again and creates commit and push
+and so on..
+Now the problem is conflicts :
+
+Sometime while pulling code from development branch git notifies that we merged all conflicts automatically --- that means git automatically applied new changes made by another developer
+But sometime the SAME git tells that automatic merge failed and shows some filenames
+then team-lead role comes into picture -- what he does is : "He reviews all listed files (during automatic merge failed process) and merges conflicts manually and creates commit and push to server.
+Now how to merge manually : GIT simply updates conflict files with all contents like this :
+
+<<< HEAD
+New lines from server that you don't have is here shown
+=====
+Your current changes....
+>>> [commit id]
+Team-lead updates that file after analyzing to this :
+
+ New lines from server that you don't have is here shown
+ Your current changes
+and creates commit and push.
+
+Again in morning we do pull (just to make sure that we didn't miss anything from previous day), This is how we work here.

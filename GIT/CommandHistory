@@ -1,0 +1,310 @@
+    1  git --version
+    2  git --version
+    3  clear
+    4  yum install git
+    5  clear
+    6  git --version
+    7  ls
+    8  mkdir myproject
+    9  cd myproject
+   10  ls
+   11  vim index.html
+   12  ls
+   13  git init
+   14  clear
+   15  ll -al
+   16  ls
+   17  git ls-files
+   18  git status
+   19  git add index.html
+   20  git status
+   21  clear
+   22  git status
+   23  git commit -m "this is file index"
+   24  git ls-files
+   25  clear
+   26  vim index2.html
+   27  git status
+   28  git add index2.html
+   29  git status
+   30  git commit -m "added index2.html"
+   31  clear
+   32  git ls-files
+   33  ls
+   34  git status
+   35  git log
+   36  git log --oneline
+   37  git show e86a3e0
+   38  clear
+   39  git log
+   40  git config --global user.name sonal0409
+   41  git config --global user.email mittal.sonal04@gmail.com
+   42  git log
+   43  clear
+   44  ls
+   45  git status
+   46  vim index.html
+   47  git status
+   48  git diff index.html
+   49  git checkout -- index.html
+   50  cat index.html
+   51  clear
+   52  git status
+   53  vim index.html
+   54  git status
+   55  git add .
+   56  git status
+   57  git diff --staged index.html
+   58  git reset HEAD index.html
+   59  clear
+   60  git status
+   61  git diff
+   62  git restore index.html
+   63  cat index.html
+   64  git diff
+   65  clear
+   66  history
+   67  clear
+   68  mkdir myapp
+   69  git add
+   70  cd
+   71  cd myapp
+   72  ls
+   73  mkdir myapp
+   74  cd myapp
+   75  git add
+   76  git init
+   77  git status
+   78  clear
+   79  history
+   80  git status
+   81  vim file1
+   82  vim filename.tf
+   83  vim class.java
+   84  clear
+   85  ls
+   86  cd myproject
+   87  ls
+   88  rm -f myapp
+   89  rm r-f myapp
+   90  rm -rf myapp
+   91  clear
+   92  ls
+   93  git ls-files
+   94  vim index2.html
+   95  git diff
+   96  git status
+   97  git commit -a -m "changes added to index2.html"
+   98  clear
+   99  git log
+  100  git log --oneline
+  101  clear
+  102  ls
+  103  touch feature1.java results file1.log
+  104  ls
+  105  git status
+  106  git add .
+  107  git status
+  108  git commit -m "added new code for feature1"
+  109  clear
+  110  git ls-files
+  111  git rm --cached file1.log results
+  112  git ls-files
+  113  git status
+  114  git commit -m "deleted file from LR"
+  115  clear
+  116  git status
+  117  vim .gitignore
+  118  git status
+  119  ls
+  120  git add .
+  121  git commit -m "added gitignore file"
+  122  git status
+  123  clear
+  124  cat .gitignore
+  125  ls
+  126  touch file1.txt
+  127  ls
+  128  git status
+  129  clear
+  130  ls
+  131  git ls-files
+  132  ls
+  133  git rm feature1.java
+  134  git ls-files
+  135  ls
+  136  git status
+  137  git commit -m "deleted feature1 file"
+  138  clear
+  139  git log --oneline
+  140  ls
+  141  git ls-files
+  142  git show e268a7c
+  143  git revert e268a7c
+  144  clear
+  145  git log --oneline
+  146  ls
+  147  git ls-files
+  148  git status
+  149  git show 8ac74ff
+  150  clear
+  151  git log --oneline
+  152  clear
+  153  git log --oneline
+  154  git reset --hard e86a3e0
+  155  git ls-files
+  156  ls
+  157  git log --oneline
+  158  clear
+  159  ls
+  160  git ls-files
+  161  git status
+  162  clear
+  163  history
+  164  clear
+  165  git status
+  166  git add .
+  167  git commit -m "done"
+  168  git log --oneline
+  169  clear
+  170  ls
+  171  vim index2.html
+  172  git status
+  173  git diff
+  174  git status
+  175  clear
+  176  git status
+  177  git stash
+  178  git status
+  179  vim index2.html
+  180  git stash list
+  181  vim file1
+  182  git status
+  183  git stash
+  184  git add .
+  185  clear
+  186  git status
+  187  git stash
+  188  git stash list
+  189  git stash show stash@{0}
+  190  git stash show
+  191  git stash show stash@{1}
+  192  git show stash@{1}
+  193  clear
+  194  git stash list
+  195  git stash pop stash@{0}
+  196  git stash apply stash@{0}
+  197  git stash list
+  198  clear
+  199  git status
+  200  git stash -p
+  201  clear
+  202  git status
+  203  clear
+  204  git commit -m "new chnage"
+  205  clear
+  206  git status
+  207  clear
+  208  git status
+  209  git log --oneline
+  210  git branch
+  211  git branch f1
+  212  git branch
+  213  git checkout f1
+  214  git branch
+  215  git log --oneline
+  216  git status
+  217  clear
+  218  ls
+  219  touch feature1.txt
+  220  git add .
+  221  git status
+  222  git commit -m "added feautre1"
+  223  git checkout master
+  224  git branch
+  225  git log --oneline
+  226  ls
+  227  clear
+  228  git merge f1 master
+  229  ls
+  230  git log --oneline
+  231  git status
+  232  clear
+  233  ls
+  234  git branch
+  235  git checkout f1
+  236  ls
+  237  git log --oneline
+  238  git branch -D f1
+  239  git branch
+  240  git checkout master
+  241  git branch -D f1
+  242  ls
+  243  clear
+  244  git log --oneline
+  245  git branch
+  246  git checkout -b df
+  247  git branch
+  248  git log --oneline
+  249  touch file1.txt
+  250  git status
+  251  ls
+  252  touch defectfix
+  253  git add .
+  254  git commit -m "new file"
+  255  clear
+  256  git log --oneline
+  257  git checkout master
+  258  git log --oneline
+  259  git merge df master
+  260  ls
+  261  clear
+  262  git log --oneline
+  263  vim login
+  264  git add .
+  265  git commit -m "login on master"
+  266  git checkout df
+  267  ls
+  268  vim login
+  269  git add .
+  270  git commit -m "login on df branch"
+  271  git log --oneline
+  272  git checkout master
+  273  clear
+  274  ls
+  275  git merge df master
+  276  vim login
+  277  git status
+  278  git commit -a -m " merged new chnages on master"
+  279  git status
+  280  clear
+  281  git log --oneline
+  282  cat login
+  283  git checkout df
+  284  cat login
+  285  git merge master df
+  286  cat login
+  287  clear
+  288  git status
+  289  ls
+  290  vim login
+  291  git commit -a -m "added on df"
+  292  git log --oneline
+  293  git checkout master
+  294  clea
+  295  clear
+  296  git cherry-pick df03134
+  297  ls
+  298  cat login
+  299  clear
+  300  git checkout df
+  301  touch newfile1
+  302  ls
+  303  git status
+  304  git checkout master
+  305  git status
+  306  git add .
+  307  git commit -m "added new file"
+  308  git log --oneline
+  309  clear
+  310  history

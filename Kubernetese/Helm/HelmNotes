@@ -1,0 +1,37 @@
+Understanding Helm
+
+Helm is one the popular package Manager in Kubernetes
+
+K8s has lot and lot of objects to create like: Deployments, ReplicaSets, LoadBalancers, Volumes, Services, secrets and others
+
+For successfully deplpying your application you need to create all the above or most of the above methoned objects.
+Creation of all these objects manually is big task, so there has to be way that you entire application could be configured at a go in K8s cluster 
+with a minimum amount of commands.
+That is where Helm can prove to be useful
+
+Configuration of Helm:
+
+2 major components:
+
+Helm
+Tiller (Server Side support for Helm)
+
+# wget -O helm.tar.gz https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz
+# ls
+# gunzip helm.tar.gz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

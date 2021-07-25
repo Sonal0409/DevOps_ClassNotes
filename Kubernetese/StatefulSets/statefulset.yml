@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: mysts
+spec:
+ replicas: 3
+ serviceName: svc-hl
+ selector:
+  matchLabels:
+   tag: label-sts
+ template:
+  metadata:
+   labels:
+    tag: label-sts
+  spec:
+   containers:
+    - image: httpd
+      name: c1

@@ -1,0 +1,25 @@
+create a new file as main.py
+Add the python code in main.py
+
+Create a docker file
+# vim dockerfile
+i
+
+FROM python:3.8
+ADD main.py .
+RUN pip install requests beautifulsoup4
+CMD ["python","./main.py"]
+
+:wq!
+
+Build the image
+# docker build -t mypy:imdb .
+
+Build a container
+docker run -it mypy:imdb
+
+container will open in interactive mode
+
+press y ==> for movie suggestion
+
+press n==> come out of container

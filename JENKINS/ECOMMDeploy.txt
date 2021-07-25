@@ -1,0 +1,18 @@
+
+
+# Install Apache HTTP Server
+
+sudo yum -y install httpd
+
+# Start Apache HTTP Server
+
+sudo systemctl start httpd
+
+if [ "$(ls -A /var/www/html)" ]
+then
+   cd /var/www/html
+   sudo git pull
+else
+ # Update App Code
+   sudo git clone https://github.com/Sonal0409/ecomm.git /var/www/html
+fi
