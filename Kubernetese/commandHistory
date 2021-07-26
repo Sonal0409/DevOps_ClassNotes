@@ -1,0 +1,59 @@
+  500  vim pod-secretENV.yml
+  501  gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project stoked-droplet-293205
+  502  clear
+  503  ls
+  504  vim dev.properties
+  505  kubectl get configmap
+  506  kubectl create configmap dev-config1 --from-file=dev.properties
+  507  kubectl get configmap
+  508  kubectl get configmap dev-config1 -o yaml
+  509  clear
+  510  kubectl get configmap
+  511  ls
+  512  clear
+  513  kubectl create -f https://raw.githubusercontent.com/Sonal0409/DevOps_ClassNotes/master/Kubernetese/configMaps/podconfigmap.yml
+  514  kubectl get pods
+  515  kubectl exec -it pod-configmap -- bash
+  516  clear
+  517  kubectl get configmap
+  518  kubectl get pods
+  519  clear
+  520  ls
+  521  cd secrets-demo
+  522  ls
+  523  vim credentials.txt
+  524  kubectl create secret generic-secret1 --from-file=./credentials.txt
+  525  kubectl create secret generic secret1 --from-file=./credentials.txt
+  526  kubectl get secrets
+  527  clear
+  528  vim secret-demo.yml
+  529  kubectl create -f secret-demo.yml
+  530  vim secret-demo.yml
+  531  kubectl create -f secret-demo.yml
+  532  kubectl get secrets
+  533  clear
+  534  ls
+  535  vim secret-stringdata.yml
+  536  vim pod-secrets.yml
+  537  kubectl create -f pod-secrets.yml
+  538  kubectl get pods
+  539  kubectl exec -it pod-secret -- bash
+  540  clear
+  541  ls
+  542  vim pod-secretENV.yml
+  543  kubectl create -f pod-secretENV.yml
+  544  kubectl get pods
+  545  kubectl exec -it pod-secret1 -- bash
+  546  cat pod-secretENV.yml
+  547  clear
+  548  kubectl exec -it pod-secret1 -- bash
+  549  kubectl get secrets
+  550  kubectl get secrets -o yaml
+  551  clear
+  552  cd
+  553  kubectl get all
+  554  kubectl delete all --all
+  555  clear
+  556  kubectl create -f https://raw.githubusercontent.com/Sonal0409/DevOps_ClassNotes/master/Kubernetese/dashboard-insecure.yml
+  557  clear
+  558  kubectl get all
