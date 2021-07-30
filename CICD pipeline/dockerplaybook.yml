@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Start docker
+    service: name=docker state=started
+
+  - name: create docker image using war file
+    command: docker build -t myproject:CICD .
+    args:
+      chdir: /opt/myproject
+
+  - name: create tag to image
+    command: docker tag myproject:CICD edu123/myproject:CICD
+
+  - name: loginto docker
+    command: docker login --username edu123 --password Edureka@123
+
+  - name: push image on to dockerhub
+    command: docker push edu123/myproject:CICD
+
+  - name: remove docker images form ansible server
+    command: docker rmi myproject:CICD edu123/myproject:CICD
+    ignore_errors: yes

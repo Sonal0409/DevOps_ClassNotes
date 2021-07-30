@@ -1,0 +1,84 @@
+
+Step 1:
+
+go to jenkins and download the plugin  publish over ssh
+
+go to manage jenkins--> go to configure system --> publist over ssh --> click on add server
+
+take the private ip of CI/CD ACM provate ip
+
+username: ec2-user
+passowrd : as created on ansible server for ec2-user
+
+click on Test configuration
+
+Jnekisn server connected to Ansible now.
+
+**********************
+
+Step 2:
+
+Create CI job
+
+create template maven
+
+git repo :
+ https://github.com/Sonal0409/DevOpsClassCodes.git
+
+build section give : clean install package 
+
+
+Now copy the addressbook.war file to ansible server
+
+post build steps: select send files or execute commands over ssh 
+
+ssh server: 
+  Name: ansibleserver
+
+Click on advance and select verbose
+
+Transfers:
+
+source files: target/*.war
+
+remove prefix : target
+
+Remote directory: //opt//myapp
+
+exec command: ansible-playbook -i /opt/myapp/hosts /opt/myapp/dockerplaybook.yml
+
+
+Go to Ansible server : CI/CDACM
+
+Create a directory under opt
+
+cd /opt
+
+sudo mkdir myapp
+
+sudo chmod 777 myapp
+
+Add dockerfile, dockerplaybook, kubeplaybook, host file
+
+RUN the JOb in jenkins
+
+adressbook.war will be there
+docker images will be pushed to docker hub
+
+*****************************
+
+Step 3:
+
+Create a new job CD
+
+select template default template
+
+post build steps
+
+send build over ssh
+
+advanced--select verbose
+
+ansible-playbook -i /opt/myapp/hosts /opt/myapp/kubeplaybook.yml
+
+
