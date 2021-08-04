@@ -1,0 +1,19 @@
+git log > commits.txt
+
+git log --before="2019-2-23" --pretty=format:'"%h","%an","%ae","%aD","%s",' --shortstat --no-merges | paste - - - > log.txt
+
+git log --pretty=format:"%ad - %an: %s" --after="2021-01-01" --until="2021-06-30" > git_log.txt
+
+You can make log report more clearly, by
+
+(1) setting number of latest commits (for example, in below command, we get latest 50 commits, you can change it to 100, 500, etc.)
+
+(2) display long commit in one line This command is display commit log in current branch:
+
+ git log --oneline -50 > log50_latest_commits.txt
+(3) If you want display commit at all branch
+
+ git log --all --oneline -50 > log50_latest_commits.txt
+Generated text file will stand at the current directory.
+
+Reference: https://git-scm.com/docs/git-log
