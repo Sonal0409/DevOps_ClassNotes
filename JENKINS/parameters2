@@ -1,0 +1,18 @@
+Here is an example of a stage that will be executed based on the condition that we get from the choice parameter.
+
+The parameter name is ENVIRONMENT, and we access it in the stage as params.ENVIRONMENT. 
+So when the choice parameter matches PROD, it will execute the steps mentioned in the stage.
+
+stage('Deploy to Production') {
+            when {
+                expression { 
+                   return params.ENVIRONMENT == 'PROD'
+                }
+            }
+            steps {
+                    sh """
+                    echo "deploy to production"
+                    """
+                }
+            }
+   }
