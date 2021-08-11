@@ -1,0 +1,23 @@
+Go to any AWS instance
+# sudo su -
+# pwd  ==> should be root
+
+Generate the ssh key as mentioned below:
+https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# ssh-keygen
+# cd /root/.ssh     ==> 2 files should be there id_rsa & id_rsa.pub
+# eval "$(ssh-agent -s)"    ===> start the ssh-agent in the background
+# ssh-add ~/.ssh/id_rsa    ====> Add your SSH private key to the ssh-agent
+# cat id_rsa.pub    =====> Copy the ssh public key to github
+# Go to github ==> Settings
+# go to SSH section on left side 
+# Click on Add new ssh key
+# give a name as developer1
+# paste the copies ssh public key from EC2-instance
+# go back to ec2-instance
+# cd
+# git clone git@github.com:Sonal0409/myproject05Aug.git
+# successfully able to clone , push to github without authentication.
+
+
