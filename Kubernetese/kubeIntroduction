@@ -1,0 +1,18 @@
+Docker swarm.                 								     
+  create a cluster of machines - swarm cluseter: manager and worker nodes
+  manger and worker both take the load, replicas are created on MANAGER node as well as worker node
+  > with 1 GB nodes we can create a cluster
+  > that can orchestrate docker container only
+ >  Bridge/ Overlay n/w
+
+Kubernetes:
+
+   you have cluster of machine : cluster of menions : kube or k8s cluster
+   MASTER and SLAVE and in k8s MASTER will not take any replicas, all replicas will be on slaves
+   > high configuration machine to create the master and slave, atleast 4GB & 2 CPU core
+   > can orchestrate containers of any type:
+        > docker 
+       > RKT
+       > CRIO
+      > Container-D
+  > we have to set up our n/w in K8s : CNI
