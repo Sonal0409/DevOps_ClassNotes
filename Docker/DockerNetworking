@@ -1,0 +1,28 @@
+To set custome IP address range to your container in docker
+
+sudo vim /etc/default/docker
+add this line to file
+
+DOCKER_OPTS="--bip=10.66.33.10/24"
+then reboot
+after reboot start a container
+
+docker run -it --name t2 jangorecki/r-base-dev /bin/bash
+and check ip of a container
+
+docker inspect --format '{{ .NetworkSettings.IPAddress }}' t2
+
+
+OR
+
+docker exec -it c1 bash -c "echo -e 'IPADDR=172.17.0.4 \n HOSTNAME=c1' >> /etc/sysconfig/network-scripts/ifcfg-eth0; /etc/init.d/network restart";
+
+
+OR - to change the IP address of this docker container
+
+You will have to first detach the container from the custom network and the connect it back by providing the ip.
+
+You can follow the following steps :
+
+docker network disconnect [OPTIONS] NETWORK CONTAINER
+docker network connect --ip 192.168.150.3 NETWORK CONTAINER
