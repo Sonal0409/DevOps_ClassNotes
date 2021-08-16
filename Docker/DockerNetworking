@@ -26,3 +26,31 @@ You can follow the following steps :
 
 docker network disconnect [OPTIONS] NETWORK CONTAINER
 docker network connect --ip 192.168.150.3 NETWORK CONTAINER
+
+
+docker network ls
+   20  docker run -d --name myn1 nginx
+   21  docker ps -a
+   22  docker inspect myn1
+   23  clear
+   24  docker network create --driver bridge edureka1
+   25  docker network ls
+   26  docker network create --driver bridge edureka2
+   27  docker network ls
+   28  clear
+   29  docker run -itd --name b1 --network edureka1 busybox
+   30  docker inspect b1
+   31  clear
+   32  docker run -itd --name b2 --network edureka1 busybox
+   33  docker inspect b2
+   34  clear
+   35  docker attach b1
+   36  docker run -itd --name b3 --network edureka2 busybox
+   37  docker inspect b3
+   38  clear
+   39  docker attach b3
+   40  docker attach b2
+   41  docker network connect edureka2 b2
+   42  docker inspect b2
+   43  clear
+   44  docker attach b2
