@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pod-vol
+spec:
+ containers:
+  - image: nginx
+    name: myn1
+    volumeMounts:
+    - mountPath: /data
+      name: myvol
+ volumes:
+ - name: myvol
+   hostPath:
+    path: /home/mittal_sonal04/mydata
+    type: DirectoryOrCreate
