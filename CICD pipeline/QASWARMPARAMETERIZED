@@ -1,0 +1,34 @@
+Go to job for docker image --> post build action-->Trigger parameterized build on other projects
+
+Projects to build : dockerimageJob
+Predefined Parameters:
+
+bno=$BUILD_NUMBER
+
+Save the job and come out
+
+Go to Deploy QA Server job for Swarm service creation:
+
+General section: this job is parametrized --> name: bno
+
+under post build section
+
+   
+    Run this playbook as parameterized job from jenkins:
+    
+    ansible-playbook -i /opt/sonal1/hosts /opt/sonal1/playbook2.yml --extra-vars "value=$bno"
+    
+    Playbook to be rpesent on ansible server
+
+- hosts: QAServer
+  become: true
+  become_user: root
+  vars:
+   ver: "{{value}}"
+  tasks:
+  - name: Start docker
+    yum: name=docker state=present
+  - name: deploy the image as container
+    command: docker service create --name myapp -p 8282:8080 --replicas 3 edu123/myproject:{{ver}}
+    
+ 
