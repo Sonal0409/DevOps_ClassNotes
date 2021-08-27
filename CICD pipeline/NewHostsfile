@@ -1,0 +1,5 @@
+[QAServer]
+172.31.11.127
+
+[kube]
+172.31.39.56 ansible_user=root
