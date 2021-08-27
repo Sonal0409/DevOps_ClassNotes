@@ -60,6 +60,11 @@ sudo chmod 777 myapp
 
 Add dockerfile, dockerplaybook, kubeplaybook, host file
 
+TO ping local host on ansible for check
+ansible -i /opt/sonal1/hosts -m ping localhost
+
+
+
 RUN the JOb in jenkins
 
 adressbook.war will be there
