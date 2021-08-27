@@ -1,0 +1,6 @@
+- hosts: kube
+  become: true
+  become_user: root
+  tasks:
+  - name: Create a deployment
+    command: kubectl apply -f https://raw.githubusercontent.com/Sonal0409/DevOps_ClassNotes/master/Kubernetese/deployment.yml
