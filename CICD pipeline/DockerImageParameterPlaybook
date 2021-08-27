@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  become: true
+  become_user: root
+  vars:
+   ver: "{{value}}"
+  tasks:
+  - name: Start docker
+    service: name=docker state=started
+
+  - name: create docker image using war file
+    command: docker build -t myproject:{{ver}} .
+    args:
+      chdir: /opt/sonal1
+
+  - name: create tag to image
+    command: docker tag myproject:{{ver}} edu123/myproject:{{ver}}
+
+  - name: loginto docker
+    command: docker login --username edu123 --password Edureka@123
+
+  - name: push image on to dockerhub
+    command: docker push edu123/myproject:{{ver}}
+
+  - name: remove docker images form ansible server
+    command: docker rmi myproject:{{ver}} edu123/myproject:{{ver}}
+    ignore_errors: yes
