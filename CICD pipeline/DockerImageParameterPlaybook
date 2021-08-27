@@ -25,3 +25,12 @@
   - name: remove docker images form ansible server
     command: docker rmi myproject:{{ver}} edu123/myproject:{{ver}}
     ignore_errors: yes
+
+
+RUN it on Ansible Controller as 
+
+ansible-playbook playbook1.yml --extra-vars "value=v1"
+
+Run using this command in jenkins job
+
+ansible-playbook -i /opt/sonal1/hosts  /opt/sonal1/playbook1.yml --extra-vars "value=$BUILD_NUMBER"
