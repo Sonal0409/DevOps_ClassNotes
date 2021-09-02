@@ -1,0 +1,79 @@
+Step 1: Spin up a VM, and install docker on it,Make sure the docker service is up and running.
+Step 2: Log in to the server and open the docker service file /lib/systemd/system/docker.service. 
+Search for ExecStart and replace that line with the following:
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock
+
+Step 3: Reload and restart docker service.
+sudo systemctl daemon-reload
+sudo service docker restart
+
+Step 4: Validate API by executing the following curl commands. Replace 54.221.134.7 with your host IP.
+
+curl http://localhost:4243/version
+curl http://54.221.134.7:4243/version
+
+Once you enabled and tested the API, you can now start building the docker slave image.
+
+Create a Jenkins Agent Docker Image : you can also use this dockerfile vailable at url:
+*************************************
+If create your own image than make sure, your image should contain the following minimum configurations to act as a slave.
+> sshd service running on port 22.
+> Jenkins user with password.
+> All the required application dependencies for the build. For example, for a java maven project, you need to have git, java, and maven installed on the image.
+
+Make sure the sshd service is running and can be logged into the containers using a username and password. Otherwise, Jenkins will not be able to start the build process.
+
+Note: The default ssh username is jenkins and the password is also jenkins as per the given Dockerfile. You will have to use these credentials in the below configuration.
+
+Configure Jenkins Server With Docker Plugin
+**********************************
+
+Step 1: Head over to Jenkins Dashboard –> Manage Jenkins –> Manage Plugins.
+Step 2: Under the Available tab, search for “Docker” and install the docker cloud plugin and restart Jenkins.
+Step 3: Once installed, head over to Jenkins Dashboard –> Manage Jenkins –>Manage Jenkins –> Manage Nodes and Clouds
+Step 4: Select cloud”  and fill out the docker host parameters for spinning up the slaves.
+Step 5: Under docker, you need to fill out the details like:
+Replace “Docker URI” with your docker host IP. For example, tcp://10.128.0.3:4243
+You can use the “Test connection” to test if Jenkins is able to connect to the Docker host.
+
+Step 6: Now, from “Docker Agent Template” dropdown, click the “Add Docker template” and fill in the details
+
+Labels – Identification for the docker host. It will be used in the Job configuration. Here we use java-docker-slave
+Name: Name of the docker template. Here we use the same name as label ie, java-docker-slave
+Docker Image – the image that you created for the slave.
+Remote Filing System Root – Home folder for the user you have created. In our case, it’s /home/jenkins
+Credentials – click add and enter the SSH username and password that you have created for the docker image.
+If you are using my Docker image, the user will be jenkins & password is also jenkins.
+By default, the workspace will not be persisted in the host. However,
+if you want the workspace to be persistent, add a host volume path under container settings.
+For example, if you want the workspace to be available at /home/ubuntu, you can add the volume path as shown below.
+/home/jenkins is the path inside the container.
+
+/home/ubuntu:/home/jenkins
+
+Towards the right of the Volumes option, if you click the question mark, it will show you additional volume options as shown below.
+
+Test Jenkins Build Inside a Docker container
+******************************
+
+Now that you have the slave configurations ready, we will test the docker agent plugin using a freestyle job.
+
+Create a freestyle job, select “Restrict where this project can be run” option and select the docker host as a slave using the label.
+
+Add a shell build step which echoes a simple “Hello World“
+
+If you have done all the configurations right, Jenkins will spin up a container, builds the project, and destroys the container once the build is done.
+
+First, you will see a pending notification as Jenkins tries to deploy a container on run time and establishes an SSH connection. After a few seconds, your job will start building.
+
+You can check the build logs in your jobs console output as well.
+
+
+
+
+
+
+
+
+
+
