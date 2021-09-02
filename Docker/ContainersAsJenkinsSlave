@@ -15,6 +15,7 @@ curl http://54.221.134.7:4243/version
 Once you enabled and tested the API, you can now start building the docker slave image.
 
 Create a Jenkins Agent Docker Image : you can also use this dockerfile vailable at url:
+https://github.com/Sonal0409/DevOps_ClassNotes/blob/master/Docker/Jenkins-docker-slave%20dockerfile
 *************************************
 If create your own image than make sure, your image should contain the following minimum configurations to act as a slave.
 > sshd service running on port 22.
