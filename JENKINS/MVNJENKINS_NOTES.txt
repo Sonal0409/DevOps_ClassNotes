@@ -23,45 +23,7 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.265.b01-1.amzn2.0.1.x86_6
 export PATH=$JAVA_HOME/bin:$PATH
 ESC :wq!
 # source /etc/profile
-
-MAVEN INSTALLATION
-****************************************
-# yum install maven
-# mvn --version
-# vim /etc/profile
-i
-export MAVEN_HOME=/usr/share/maven
-ESC :wq!
-
-# source /etc/profile
-# echo $MAVEN_HOME
-
-***************************************
-Clone GIt DEVOPS repository
-
- mkdir myproject
- cd myproject
- mkdir projects
- cd projects
- git clone https://github.com/Sonal0409/DevOpsClassCodes
- ls
- cd DevOpsClassCodes
- ls
-********************************
-RUN MAVEN COMMANDS
- # mvn compile
- # cd /root/myproject/projects/DevOpsClassCodes/target/classes
- ls
- cd com
- ls
- cd edurekademo
- ls
- cd utilities
- ls
- cd
- pwd
-
-****************************************
+****************************************************
 
 INSTALL JENKINS
 
@@ -217,6 +179,47 @@ https://github.com/Sonal0409/GITHUBJENKINSDEMO
 Build Triggers--> Poll SCM --> * * * * *
 
 Build will be generated each time there is a chnage in the repository only.
+
+**************************************
+MAVEN INSTALLATION
+****************************************
+# yum install maven
+# mvn --version
+# vim /etc/profile
+i
+export MAVEN_HOME=/usr/share/maven
+ESC :wq!
+
+# source /etc/profile
+# echo $MAVEN_HOME
+
+***************************************
+Clone GIt DEVOPS repository
+
+ mkdir myproject
+ cd myproject
+ mkdir projects
+ cd projects
+ git clone https://github.com/Sonal0409/DevOpsClassCodes
+ ls
+ cd DevOpsClassCodes
+ ls
+********************************
+RUN MAVEN COMMANDS
+ # mvn compile
+ # cd /root/myproject/projects/DevOpsClassCodes/target/classes
+ ls
+ cd com
+ ls
+ cd edurekademo
+ ls
+ cd utilities
+ ls
+ cd
+ pwd
+
+****************************************
+
 
 *********************************
 
