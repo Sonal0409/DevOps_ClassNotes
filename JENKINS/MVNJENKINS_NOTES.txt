@@ -163,6 +163,86 @@ Email will be sent with log
 *****************************************
 TRIGGERS
 
+TRIGGERS
+
+If we want to automatically trigger a Job
+
+Build triggers for any job:
+
+1. Trigger builds remotely (e.g., from scripts)
+
+Select the above very first option
+give Authentication token as : token1 
+any unique token number
+
+And then copy the path provided below in this format:
+JENKINS_URL/job/job4/build?token=TOKEN_NAME 
+
+
+update the above url in this way:
+Jenkins_URL: Curent url :http://3.140.252.165:8080
+Token_NAME: token number/name provided above
+
+Take this path and execute on anyother browser.
+
+http://3.140.252.165:8080//job/job4/build?token=token1
+
+Login as admin admin
+you can run that job.
+
+2. GitHub hook trigger for GITScm polling
+
+> Select the above option
+
+Save the job and now go to git hub
+
+Always save the job and then only  go to git hub, perform these steps
+
+go to the repository setting
+select webhooks on left side
+delete if any exisitng webhook
+
+click on createwebhook on right side
+
+provide following information:
+
+Payload URL : jenkinsurl/github-webhook/ ===> http://3.140.252.165:8080/github-webhook/
+
+Content type : select application/json
+
+Secret: no need of any value
+
+Which events would you like to trigger this webhook?
+
+select first option -- Just the push event.
+
+Select Active
+click on add webhook.
+
+now make some changes in repo,
+go to jenkins--> you will see a new build has been created
+
+3. Trigger prieodically
+
+Create anew Job--> build trigger--> build preodically --> give */2 * * * * --> Save and build now
+All build will be genrated automatically every 2 mins
+
+4. Trigger by POLL SCM
+
+Create a new Job-->Source code management--> Add git path
+
+https://github.com/Sonal0409/GITHUBJENKINSDEMO
+
+Build Triggers--> Poll SCM --> * * * * *
+
+Build will be generated each time there is a chnage in the repository only.
+
+*********************************
+
+
+
+*********************
+
 If we want to automatically trigger a Job
 
 1. Trigger prieodically
