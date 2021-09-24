@@ -35,6 +35,8 @@ and copy these commands
  # sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     
     yum install epel-release # repository that provides 'daemonize'
+    
+    sudo amazon-linux-extras install epel
 
   yum install jenkins
   
