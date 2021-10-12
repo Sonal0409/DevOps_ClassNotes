@@ -7,15 +7,14 @@
 
 ## Deploy myshop application which has different micro services on k8s cluster
 
-`https://raw.githubusercontent.com/lerndevops/labs/master/kube/ingress/deploy-myshop.yml`
+`
 
 ## Deploy Ingress Controller 
 
-`https://raw.githubusercontent.com/lerndevops/labs/master/kube/ingress/nginx-ing-controller.yaml`
 
 ## Deploy Ingress Rule
 
-`https://raw.githubusercontent.com/lerndevops/labs/master/kube/ingress/ingress-rule.yml`
+
 
 ## Get Ingress Controller Service NodePort 
 
