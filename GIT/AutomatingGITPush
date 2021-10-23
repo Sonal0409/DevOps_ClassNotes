@@ -1,0 +1,39 @@
+Write a simple bash script and save it on your home directory with git-push.sh
+
+
+echo "Enter your message"
+read message
+git add .
+git commit -m"${message}"
+if [ -n "$(git status - porcelain)" ];
+then
+ echo "IT IS CLEAN"
+else
+ git status
+ echo "Pushing data to remote server!!!"
+ git push -u origin master
+fi
+
+
+Now, we will make this file an executable file by changing the permission using chmod command.
+chmod +x git-push.sh
+or
+chmod 755 git-push.sh
+
+
+Once the script is executable we will need to copy it to a directory that in our system expects to contain executable scripts and code.
+On most systems we will have a choice between two directories. 
+If we are the only user of our system you can copy our script to either /usr/bin or /usr/local/bin.
+If you share your system with other people it's best to copy your script to /usr/local/bin. 
+You will most likely need super-user privileges to copy our script to either of these directories so most likely we need to use the sudo command.
+
+
+sudo cp git-push.sh /usr/bin/git-push.sh
+sudo cp git-push.sh /usr/local/bin
+
+
+This will make our script accessible globally so that we can use it from anywhere and anytime we want.
+
+Alt Text
+
+Moreover, if you want to make push scheduled over particular time you can use crontab job scheduler to do so.
