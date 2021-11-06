@@ -10,4 +10,4 @@ spec:
     port: 1234
     nodePort: 30008
  selector:
-  type: proxyserver
+  type: webserver
