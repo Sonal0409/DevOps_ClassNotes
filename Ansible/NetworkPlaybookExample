@@ -1,0 +1,91 @@
+https://docs.ansible.com/ansible/latest/network/index.html
+
+Hostfile:
+
+cat /etc/ansible/inventory/host-file
+
+[routers]
+router-1 ansible_host=192.168.1.57
+router-2 ansible_host=192.168.1.58
+
+and Variables
+
+cat /etc/ansible/inventory/host-file
+
+[routers]
+router-1 ansible_host=192.168.1.57
+router-2 ansible_host=192.168.1.58
+
+[routers:vars]
+ansible_network_os=ios
+ansible_user=ansible
+ansible_password=cisco123
+
+ansible_network_os- Informs Ansible which Network platform this hosts corresponds to.
+ansible_user - The user to connect to the remote device
+ansible_password - The password for the user.
+
+
+
+
+Playbook which runs 'show version | incl Version' command on both routers and show us the output.
+
+
+
+---
+
+- name: Cisco show version example
+  hosts: routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: run show version on the routers
+      ios_command:
+        commands: show version | incl Version
+      register: output
+
+    - name: print output
+      debug:
+        var: output.stdout_lines
+
+
+YAML file starts with ---
+name - Any arbitrary name
+hosts - Referring to the inventory group called 'routers'
+gather_facts - We don't need to gather any information from the routers. This may be useful when working with servers.
+connection - Playbook is run against a network device.
+register - You can create variables from the output of an Ansible task with the task keyword register. You can use registered variables in any later tasks in your play
+debug - This module prints statements during execution.
+stdout_lines - Ansible will print the output in an easy to readable format.
+
+We are running two tasks, first one runs show version | incl Version on both routers and saves the output in a variable called output.
+ The Second task prints the variable ouput in a nice format.
+
+
+
+Run multiple 'show commands' at once
+You can run multiple show commands within the same task.
+
+
+- name: Cisco ip interface brief + ip route
+  hosts: routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: run show ip interface brief + ip route
+      ios_command:
+        commands: 
+          - show ip interface brief
+          - show ip route
+      register: output
+
+    - name: print output
+      debug:
+        var: output.stdout_lines
+
+
+Ansible Network Examples
+
+https://docs.ansible.com/ansible/latest/network/user_guide/network_best_practices_2.5.html
