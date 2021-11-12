@@ -1,0 +1,53 @@
+Encrypting sensitive data with Ansible Vault.
+Ansible Vault encrypts variables or files so, the sensitive data such as passwords or keys are not visible.
+
+In our example, we can see that the SSH password is visible in the group_vars file. Let's encrypt it.
+
+Inside the group_vars/routers.yml file, we have variables. Some variables, like the network_os and user_name, are not secret. 
+Other variables, like the SSH password, is confidential.
+
+cat routers.yml 
+---
+
+#nonsensitive data
+ansible_network_os: ios
+ansible_user: ansible
+
+#sensitive data
+ansible_password: cisco123
+
+We can make distinction between sensitive and nonsensitive variables using two methods. 
+The first one is to split the variables between two files and encrypt the sensitive file.
+
+Step 1 - Create a vault-encrypted file within the directory that will live alongside the unencrypted routers.yml file. In this file, define the sensitive variables that used to be in the group_vars/routers.yml file. Use the same variable names, 
+but prepend the string vault_ to indicate that these variables are defined in the vault-protected file.
+
+ansible-vault create vault
+New Vault password: 
+Confirm New Vault password: 
+
+vault yml file
+
+---
+vault_ansible_password: cisco123
+
+
+cat inventory/group_vars/routers/vault 
+
+To view the contents of an encrypted file without editing it, you can use the ansible-vault view command as shown below.
+
+$ ansible-vault view vault 
+Vault password: 
+---
+
+vault_ansible_password: cisco123
+
+
+To edit an encrypted file in place, use the ansible-vault edit command. This command decrypts the file to a temporary file, allows you to edit the content, then saves and re-encrypts the content and removes the temporary file when you close the editor.
+
+Let's run the playbook again.
+
+The most straightforward way of decrypting content at runtime is to have Ansible prompt you for the appropriate credentials. You can do this by adding the --ask-vault-pass to any ansible or ansible-playbook command.
+
+ ansible-playbook show_version.yml -i /etc/ansible/inventory/host-file --ask-vault-pass
+Vault password: 
