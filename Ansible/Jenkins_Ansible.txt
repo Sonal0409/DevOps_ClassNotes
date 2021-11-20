@@ -1,0 +1,123 @@
+Jenkins - Ansible playbook Scenario
+
+Git Repository name:
+https://github.com/Sonal0409/myansible
+
+Open the Jenkins AWS instance
+Download ansible on this instance
+
+# systemctl start jenkins
+# yum install epel-release
+#sudo amazon-linux-extras install epel
+# yum install ansible
+
+y
+y
+complete!
+
+Go to jenkins page
+hostname:8080
+
+Loginto jenkins
+admin
+admin
+
+Go to manage jenkins --> manage plugins--> Available-->Ansible
+Install it
+
+Go to Global tool configuration
+
+Scroll down to ansible will be there
+first file give name as myansible
+path as /usr/bin
+
+or go to jenkins aws instance and query ansible locationas :
+# which ansible ==> /usr/bin/ansible
+
+Create a new Job
+
+name as myansible
+select pipeline project
+
+go to pipeline and write the code as:
+
+Pipeline code:
+
+pipeline{
+    agent any
+    stages{
+        stage('SCM Checkout'){
+            steps{
+            git branch: 'main', url: 'https://github.com/Sonal0409/myansible'
+            }
+        }
+        stage('execute playbook'){
+            steps{
+                   ansiblePlaybook credentialsId: 'privatekey', disableHostKeyChecking: true, installation: 'myansible', inventory: 'dev.inv', playbook: 'playbook1.yml'
+            }
+        }
+            
+        }
+        
+            
+        
+    }
+
+
+For above code
+
+Stage1
+
+click on pipeline syntax
+
+select sample step as git.Git  
+
+give repo url as :https://github.com/Sonal0409/myansible
+branch : main
+
+scroll down and click on generate pipeline script
+
+Capy the code and put in script
+
+Stage2
+
+click on pipeline syntax
+
+Select step as ansible playbook :
+
+Ansible tool : myansible  // will be there by default
+
+Playbook file path in workspace : playbook1.yml    
+// filename of playbookfrom git
+		
+Inventory file path in workspace: dev.inv
+
+SSH connection credentials : 
+
+click on add-->jenkins
+
+select kind : SSH username with private key
+
+id: private-key
+Description: ansible
+Username: ec2-user
+privateKey :
+
+go to downloads folder.. go to the host pem key which is gittoday
+open it with notepad and copy the text
+
+go to jenkins
+click on add button and paste the text
+  clcik on add key at bottom
+
+now at SSH connection credentials : select ec2-user from drop down
+
+Scroll down and check on 		
+ 	Disable the host SSH key check
+
+Clcik on Generate pipeline script
+
+Copy the code and as to your pipeline script.
+
+Save and Build Now
+
