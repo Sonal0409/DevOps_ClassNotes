@@ -1,0 +1,80 @@
+Integrating Django with Jenkins
+
+Install Jenkins
+
+Installing Python
+Most of the systems with OS like MacOS or Ubuntu already have python installed. You may need to update python to latest version. To do so follow below steps:
+Mac:
+brew udpate
+brew install python3
+Ubuntu:
+sudo apt-get update
+sudp apt-get install python3
+
+Create a folder MyProject in your workspace
+Create virtual environment in MyProject as:
+virtualenv myenv
+start virtual environment as:
+source myenv/bin/activate
+
+Install Django
+
+pip install Django
+
+create a project DjangoJenkins
+django-admin startproject DjangoJenkins
+create an app MyApp
+django-admin startapp MyApp
+Install jenkins’ plugins:
+pip install django-jenkins
+pip install pep8
+pip install pyflakes
+Added jenkins in settings.py:
+In the file DjangoJenkins->DjangoJenkins->settings.py->INSTALLED_APPS add django_jenkins
+
+in settings.py add below lines:
+PROJECT_APPS = (
+‘MyApp’
+)
+JENKINS_TASKS = (
+‘django_jenkins.tasks.run_pep8’,
+‘django_jenkins.tasks.run_pyflakes’
+)
+
+
+
+Once you have Django and Jenkins up and running, you can start configuring Jenkins for Django now:
+Start Jenkins.
+
+Create new item:
+Give name to the item: DjangoJenkinExample
+Select Freestyle project
+Click Ok
+
+In Source code Management, select Git and give repo and branch name
+
+In Build Triggers, select Poll SCM
+and write
+H/15 * * * *
+in the text field.
+
+In Build, select exucute shell and white below lines:
+#!/bin/bash
+virtualenv -p python3 myenv
+source myenv/bin/activate
+pip3 install -r requirements.txt
+cd reports
+touch *.xml
+touch *.report
+cd ..
+python3 manage.py jenkins — enable-coverage
+
+
+click Build Now
+
+
+
+
+
+
+
