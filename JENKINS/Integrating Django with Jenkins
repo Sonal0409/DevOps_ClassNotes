@@ -73,6 +73,9 @@ python3 manage.py jenkins — enable-coverage
 click Build Now
 
 
+Reference document : https://django-jenkins.readthedocs.io/en/latest/
+
+
 
 
 
