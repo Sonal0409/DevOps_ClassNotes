@@ -3,7 +3,7 @@ apiVersion: apps/v1
 metadata:
   name: kubeserve
 spec:
-  replicas: 3
+  replicas: 2
   minReadySeconds: 10 # wait for 45 sec before going to deploy next pod
   strategy:
     type: RollingUpdate
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
        - name: app
-         image: edu123/myproject:2
+         image: edu123/myimage:docker
 ---
 kind: Service
 apiVersion: v1
