@@ -1,0 +1,687 @@
+Linux fundamentals:
+***********
+
+to see the linux version:
+
+$ lsb_release -a   : ubuntu machine
+
+$ cat /etc/os-release : centos machine
+
+2. To check which shell you are woring on:
+
+echo $shell
+
+3. Commands are nothing but binaries stored on your OS
+for eg: you execute pwd --> your shell goes and looks for pwd binary on your OS and exeuctes it
+for eg : you give wrong command --> your shell will not be able to find the binary and you get error command not found
+****************************
+4. print the current date
+
+# date
+
+- prints the current date with time and timezone
+
+Examples:
+Convert seconds since the epoch (1970-01-01 UTC) to a date
+  $ date --date='@2147483647'
+
+Show the time on the west coast of the US (use tzselect(1) to find TZ)
+  $ TZ='America/Los_Angeles' date
+
+Show the local time for 9AM next Friday on the west coast of the US
+  $ date --date='TZ="America/Los_Angeles" 09:00 next Fri'
+*************************
+
+5. print current month calender
+
+# cal
+**************************
+6. Manual or man
+
+it is binary or command that displays documentation of other commands
+
+# man date
+
+gives documentation of date commanduse up and down arror to scroll
+press q to comoe out of it
+
+
+for some commands we can also give 
+
+commandname --help
+
+date --help ===> doesnt work for pwd
+
+********************************
+List the file in a directory
+
+# ls ==> list files in the directory
+
+# ls / ==> all files in root directory
+
+# ls -l / ==> all files in long format in root directory - more details
+
+# ls -lS / ===> sort all the files by size and list them
+
+# ls -lt / ==> ===> sort all the files by time and list them
+
+# ls -al ==> list all files which are hidden ==> the .files
+*******************************
+Create a directory
+
+# mkdir myproject
+
+# ls  --> lists directory
+
+GO inside the directory
+
+# cd directory name
+
+Come out of directory
+
+cd ..  ==> come out of current directory
+
+Go to specific directory
+
+cd /home
+or
+cd /tmp
+
+
+***********************************
+
+go inside the directory and create a file
+
+using Vim editor
+
+vim file1
+
+press i
+
+enter data
+
+press esc --> :wq!
+
+give ls
+
+file will be in directory
+
+Create one more file
+
+Creta file using nano editor
+
+nano file1
+
+just enter data ==> new file
+
+ctl x ==> exit at bottom
+
+presss y to give yes
+
+press enter
+
+out of file
+
+ls
+
+Touch comand to create empty file
+**************************
+
+Cat comand
+
+list contents of file1
+
+cat file1
+
+*****************************
+
+Make a copy of an exisitng file
+
+cp sourcefile newfilename
+
+cp file1 copiedfile
+
+ls
+
+cat copiedfile
+
+file content will be same
+
+************************************
+
+Move file form 1 directory to another
+
+Lets move file1 from myprojetc directory to another directory
+
+comeout of myproject directory
+
+create a new directory
+
+mkdir newprojectfiles
+
+cd newprojectfiles
+
+pwd  ==> copy the path
+
+go back to old directory
+
+cd myproject
+
+mv file1 /copiedpath/file1
+
+eg : mv file1 /home/ec2-user/mynewfiles/file1
+
+files will be not copied but moved to new directory or location
+
+**********************************
+
+Echo command:
+
+print/display a line of text/string by passing it as an argument
+
+# echo hello world
+
+echo -e 'hello \bworld' ==> will print the text without space
+
+here -e : enable interpretation of backslash escapes
+
+echo -e 'hello \nworld'  ===> will seperate words and prints eachword in a new line
+
+
+ehco can be used to store values
+
+a=45
+ehco $a ==> wil give 45
+
+*************************************
+
+Remove a file:
+
+rm filename
+
+rm copiedfile 
+
+ls
+
+removes the files
+
+Remove directories
+
+rm -rf mynewprojects
+
+       -r, -R, --recursive
+              remove directories and their contents recursively
+
+       -d, --dir
+              remove empty directories
+
+  -f, --force
+              ignore nonexistent files and arguments, never prompt
+
+*********************
+
+less command
+
+create a file
+
+vim file1
+
+press i
+
+instert lots of data in sepeerate lines
+
+abc
+12
+ewe
+asrwr
+qwrwr
+qwrwr
+qrwr
+..
+...
+
+
+save the file and comout
+
+now give cat file1  ==> wil display content but you cannot scroll up and down the page
+
+instead give less command
+
+less file1  ==. will displayed the content page wise
+use up and down arrow to scroll
+
+more file1 ==> also shows how much more % data is left to be dipslayed
+
+*********************
+
+tail command
+
+tail file1
+
+will print only last 10 lines of the file
+
+or
+
+tail -n 5 file1 ==> print only last 5 lines of the file
+
+*******************
+
+head command
+
+head filename
+
+will print only first 10 lines of the file
+
+head -n 5 filename
+
+will print only first 5 lines of the file
+
+*********************
+
+Grep command
+
+Used to search for characters in a file and present it to you
+
+create afile 
+
+vim filenew
+
+This is my file for devops
+created by sonal for devops
+sonal is teaching Linux
+We are learning Linux commands for devops
+
+:wq!
+
+grep devops filenew  ==> give only that content of file highlighting devops
+
+This is my file for devops
+created by sonal for devops
+We are learning Linux commands for devops
+
+grep devops filenew -c ==> gives count of lines that have matchin string/character
+
+3
+
+grep devops filenew -v ==> gives those lines that dont have the matching string.
+
+sonal is teaching Linux
+
+grep devops file2 -n ===> gives the line numbers along with lines with matching string
+
+[ec2-user@ip-172-31-15-184 ~]$ grep devops file2 -n
+4:this file for devops
+5:created by sonal for devops
+7:we will need it for devops
+
+************************
+
+History command
+
+************************
+
+Sort commad
+
+this command will print the content of the file on the screen in a sorted manner
+
+cat command just displays the content of the file
+
+but sort command will print the content in sorted manner
+
+# sort file1
+
+# sort file2
+
+*************************
+
+execute 2 commands together 
+
+use | symbol  == this is pipeing symbol
+
+# sort file1 | less
+
+sort file content and displayes data as pages
+
+# sort file1 | grep sonal file2
+
+sort the contnet of the file and give lines that have above string
+
+example2:
+
+[ec2-user@ip-172-31-15-184 ~]$ sort file2
+created by sonal for devops
+ssh -i "02dec.pem" ec2-user@ec2-3-145-61-249.us-east-2.compute.amazonaws.com
+this file for devops
+we are learning linux
+we will need it for devops
+
+Example 3:===> 2 commands together
+[ec2-user@ip-172-31-15-184 ~]$ sort file2 | grep devops file2
+this file for devops
+created by sonal for devops
+we will need it for devops
+
+example 4: execute 2 commands 
+
+[ec2-user@ip-172-31-15-184 ~]$ sort file2 | grep devops file2 -n
+4:this file for devops
+5:created by sonal for devops
+7:we will need it for devops
+
+==> gives output with line number
+
+************************************
+
+Become a super user to provide privelaged access to create, and installation
+
+by default in AWS root is the previlaged user and you cna become a root user by giving command
+sudo su -
+
+suberuser do superuser -
+
+********
+
+create a user in Linux
+
+first become root user and then execute these commands.
+
+useradd alice
+useradd bob
+
+cat /etc/passwd ==> users in this system that have been created, at end you will see alice and bob also
+
+Delete a User
+********
+
+userdel bob
+
+to check the output
+
+give cat /etc/passwd
+
+or 
+
+tail /etc/passwd ==> will return last lines
+
+you will see bob is deleted
+
+*********
+
+Create a user group
+
+what is a group ==> set of users form a group
+
+commad to create a group
+
+# groupadd purdue  ==> creates a new group
+
+see the group created
+
+# cat /etc/group  ==> shows information about all the groups, at end see you group name
+right now there is no user in it
+
+scroll up and see other groups like wheel which has user ec2-user
+wheel:x:10:ec2-user
+
+adm group which has user ec2-user
+
+
+adm:x:4:ec2-user
+
+extreme right is user and left is group name
+
+Also note that, when we just create a user, it also creates a group with same name as user
+hence you see alice and bob at the end
+
+****************
+
+Now add users to the created group== command ==> usermod
+
+
+# usermod -G purdue alice
+
+modify user and add alice user to group purdue
+
+-g ==> group 
+
+# cat /etc/group
+
+purdue:x:1003:alice
+
+***********************************
+
+File permissions:
+
+In linux ever file has 3 permissions : read, write and execute
+
+read : one can view and copy contents of file
+
+Write : one can modify file content
+
+exeucte: one can run the file if it is executable
+
+Permissions to directories will be same
+
+execute commad ls -al
+
+all the files will be displayed including hidden files
+
+take the file that we have created : file1
+
+-rw-rw-r-- 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+here :
+
+file1 : name of file
+
+ Feb  6 02:20 : time when the file was last accessed
+
+177 : size of the file in bytes
+
+ec2-user : the right side first one --> is the name of group in which user is created
+
+ec2-user : the left side one --> the name of the user or owner of the file
+
+1 : shows weather file has hard links by default its 1
+
+
+-rw-rw-r--  : these are permissions : there are 3 sets of permissions
+
+- : in the begingin shows its a file
+
+rw- : permissions given read and write to the owner of the file ec2-user
+
+rw- : permissions given read and write to any user in the group ec2-user
+
+r-- : permissions given read only to any other user who are not owner neither part of ec2-user group
+
+
+example 2:  take another example from list
+
+-rw-r--r-- 1 ec2-user ec2-user  231 Jul 15  2020 .bashrc
+
+here 
+
+.bashrc : name of the file
+
+Jul 15  2020: date when it was last accessed
+
+231 : size in bytes
+
+ec2-user : the right side first one --> is the name of group in which user is created
+
+ec2-user : the left side one --> the name of the user or owner of the file
+
+
+-rw-r--r--:
+
+
+- : in the begingin shows its a file
+
+rw- : permissions given read and write to the owner of the file ec2-user
+
+r- : permissions given read and write to any user in the group ec2-user
+
+r-- : permissions given read only to any other user who are not owner neither part of ec2-user group
+
+
+example 3:
+
+drwxrwxr-x 2 ec2-user ec2-user   19 Feb  6 01:58 mynewfiles
+
+
+here 
+
+d : it is a directory
+
+rwx : permissions given read and write, executable to the owner of the file ec2-user
+
+rwx :  permissions given read and write and execute to any user in the group ec2-user
+
+r-x :  permissions given read and exeucte to any other user outside the group ec2-user
+
+
+
+*****************************
+
+Change permissions of a file
+
+
+Change permission of file file1
+
+current permissions : -rw-rw-r-- 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+
+change permissions for all users of the file: add executable permissions to the all users, owner + group + all users other than the group
+
+# chmod a+x file1
+
+here 
+
+a+x ==> a = all users(user, group , all users) , + add permission, x : executable permission
+
+new permission:
+
+-rwxrwxr-x 1 ec2-user ec2-user  177 Feb  6 02:20 file1  : executable added for all users
+
+Example 2:
+
+Now chnage permssion for group.. remove excutable permission for group on the file
+
+ls -al
+
+-rwxrwxr-x 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+chmod g-x file1
+
+-rwxrw-r-x 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+Example 3:
+
+remove executable for only main user of file
+
+chmod u-x file1
+
+-rw-rw-r-x 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+
+Example 4:
+
+add executable permission to main user
+
+chmod u+x file1
+
+-rwxrw-r-- 1 ec2-user ec2-user  177 Feb  6 02:20 file
+
+Example 5:
+
+remove executable permission for others only
+
+chmod o-x file1
+
+-rwxrw-r-- 1 ec2-user ec2-user  177 Feb  6 02:20 file1
+
+*******************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
