@@ -1,6 +1,4 @@
 Tomcat installation on EC2 instance
-Follow this video lecture in Valaxy Technologies YouTube Channel
-Complete DevOps Project course on Udemy
 Pre-requisites
 EC2 instance with Java v1.8.x
 Install Apache Tomcat
