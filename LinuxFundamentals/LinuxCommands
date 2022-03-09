@@ -605,15 +605,77 @@ chmod o-x file1
 
 
 
+list all users account using the /etc/passwd file
+$ cat /etc/passwd
+
+Each line in the file has seven fields as follows. For example, consider the following line:
+vnstat:x:131:137:vnstat daemon,,,:/var/lib/vnstat:/usr/sbin/nologin
+
+Where,
+
+vnstat – The user name or login name.
+x – Encrypted password is stored in the /etc/shadow file.
+131 – UID (user ID number)
+137 – Primary GID (group ID number)
+vnstat daemon – GECOS. It may includes user’s full name (or application name, if the account is for a program), building and room number or contact person, office telephone number, home telephone number and any other contact information.
+/var/lib/vnstat – Home directory for the user.
+/usr/sbin/nologin – Login shell for the user. Pathnames of valid login shells comes from the /etc/shells file.
+
+
+********************
+Of course we can use pagers such as more/less commands as follows to view the /etc/passwd file:
+$ more /etc/passwd
+
+it will show how more pages with content are left
+
+$ less /etc/passwd
+
+you can access the file using up and down arrow
+
+*********************
+
+limit outputs using the head command and tail command as follows:
+tail -5 /etc/passwd  -- show last 5 users
+head -5 /etc/passwd  -- shows top 5 users
+
+
+********************
+
+To list only usernames type the following awk command:
+
+$ awk -F':' '{ print $1}' /etc/passwd
+
+
+Sample outputs:
+
+root
+daemon
+bin
+sys
+sync
+games
+man
+lp
 
 
 
 
+Refer : https://www.cyberciti.biz/faq/linux-list-users-command/
 
+**********************************
+You need to use rpm command to display all installed packages in Linux.
 
+Red Hat/Fedora Core/CentOS Linux
+Type the following command to get list of all installed software
+# rpm -qa | less
 
+Debian Linux
+Type the following command to get list of all installed software:
+# dpkg --get-selections
 
-
+Ubuntu Linux
+Type the following command to get list of all installed software:
+# sudo dpkg --get-selections
 
 
 
