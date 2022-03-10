@@ -1,0 +1,108 @@
+Scenario 1:
+
+git log --oneline
+
+git log --oneline >> filename.txt
+
+git show commitid
+
+Scenario 2:
+
+Take an exisitng file, make change to it. Add the chnages/modification to git
+
+made chnages to file index1.html
+git add filename
+git commit -m "done"
+
+OR
+
+exiting file is modified
+
+take an exisitng file..make chnages to it
+
+git status
+git commit -a -m " added modification"
+
+Scenario 3:
+
+pre req : file should be already exisitng
+
+take a file which is in LR
+
+git ls-files
+
+vim filename ==> add chnages
+
+git status ===> modification
+
+to see the difference of chnages done on a file
+
+git diff filename
+
+
+to see the difference of chnages done on 2 commits
+
+git diff commitid1 commitd2
+
+********************
+
+Scenario 4:
+
+Delete an exisitng file from Local Repo as well from Working Directory
+
+git rm filename
+
+git commit -m "deletion"
+
+delete file only from local repo
+
+git rm --cached filename
+
+********************
+
+Scenario 5: Revert the changes
+
+ $ git revert commitid
+
+
+*****************
+
+Scenario 6:
+
+Set up the configuration of git repo
+
+$ git config --global user.email mailid
+
+$ git config --global user.name yourName
+
+**********************
+
+Scenario 7 :  repeat it for Ramesh
+
+*******
+
+if there are files that you do not want git to track
+
+Create a file .gitignore
+
+add the name of the files that are not required to be tracked by git
+
+save the file
+
+$ git status
+
+$ git add .
+
+$ git commit -m "done"
+
+Scenario is applicable for files that are untacked by git
+
+
+
+
+rm -rf ==> linux command==> delets file from working directory
+
+git rm ==> git command ==> deletes file from WD & local repo
+
+git rm --cached  ==> git command ==> deletes file from only local repo 
+
