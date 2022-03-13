@@ -626,7 +626,7 @@ vnstat daemon – GECOS. It may includes user’s full name (or application name
 Of course we can use pagers such as more/less commands as follows to view the /etc/passwd file:
 $ more /etc/passwd
 
-it will show how more pages with content are left
+okay, it will show how more pages with content are left
 
 $ less /etc/passwd
 
