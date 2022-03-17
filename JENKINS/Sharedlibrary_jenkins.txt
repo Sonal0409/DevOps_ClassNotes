@@ -1,0 +1,101 @@
+git checkout [commit-ref] [filename]
+
+git checkout HEAD file/to/restore
+
+git checkout master~5 filename
+
+
+git restore --source=c5f567 file1/to/restore file2/to/restore
+Or if you want to restore to the content of one commit before c5f567:
+
+git restore --source=c5f567~1 file1/to/restore file2/to/restore
+
+
+Shared Libraries:
+
+You only need to write your code once, and then you can share the same code with all of your pipelines.
+
+You can store your “reusable bits” in a Shared Library in Jenkins.
+
+A shared library is a collection of independent Groovy scripts which you pull into your Jenkinsfile at runtime.
+
+The best part is, the Library can be stored, like everything else, in a Git repository. This means you can version, tag, to with Git.
+
+
+Create the shared library
+
+First you need to create a Git repository which will contain your library of functions (steps). (You can also use Subversion.)
+
+In your repository, create a directory called vars. This will hold your custom steps. Each of them will be a different .groovy file underneath your vars directory, e.g.:
+
+
+vars/
+    deployApplication.groovy
+    parseFile.groovy
+    sayHello.groovy
+    readSystemCredentials.groovy
+    doCodeReview.groovy
+
+
+Add your custom steps
+
+Each of your custom steps is a different .groovy file inside your vars/ directory. In Jenkins terminology, these are called Global Variables, which is why they are located inside vars/.
+
+Create a file for your custom step, and fill in the code. For example, a simple greeting function would look like this:
+
+
+#!/usr/bin/env groovy
+
+def call(String name = 'human') {
+    echo "Hello, ${name}."
+}
+
+
+After writing that, you should write your custom code within the braces { }. 
+You can also add parameters to your method - the example above has one parameter called name, 
+which has a default value of human (cos we’re being really personal here.)
+
+
+Set up the library in Jenkins
+
+Now you’ve created your library with custom steps, you need to tell Jenkins about it.
+
+You can define a shared library within a Jenkinsfile, or you can configure the library using the Jenkins web console. Personally, I think it’s better to add from the web console, because you then you can share the library across all of your build jobs.
+
+To add your shared library
+
+
+In Jenkins, go to Manage Jenkins → Configure System. Under Global Pipeline Libraries, add a library with the following settings:
+
+Name: pipeline-library-demo
+
+Default version: Specify a Git reference (branch or commit SHA), e.g. master
+
+Retrieval method: Modern SCM
+
+Select the Git type
+
+Project repository: https://github.com/tutorialworks/pipeline-library-demo.git
+
+
+Use the library in a pipeline
+
+To use the shared library in a pipeline, you add @Library('your-library-name') to the top of your pipeline definition, or Jenkinsfile. Then call your step by name, e.g. sayHello:
+
+ @Library('pipeline-library-demo')_
+
+ stage('Demo') {
+     echo 'Hello world'
+     sayHello 'Dave'
+ }
+
+
+If you’re using declarative pipeline, the syntax looks slightly different:
+
+ libraries {
+     lib('pipeline-library-demo')
+ }
+
+ pipeline {
+     // Your pipeline would go here....
+ }
