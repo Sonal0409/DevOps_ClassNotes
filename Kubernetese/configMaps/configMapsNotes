@@ -43,3 +43,9 @@ spec:
  # cd /etc/config
  
  you will find the dev.properties file and configurations
+ 
+ Edit the configMAP
+ 
+ kubectl edit configmap -n <namespace> <configMapName> -o yaml
+
+This opens up a vim editor with the configmap in yaml format. Now simply edit it and save it.
