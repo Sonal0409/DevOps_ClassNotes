@@ -1,6 +1,9 @@
 Ansible Notes
 
 Create 2 instances and start them
+    give them instance names to have
+        *ansible-controller-machine* & 
+        *ansible-host-machine*
 
 Set up on ACM:
 ********************************
@@ -52,7 +55,7 @@ Repeat all the 4 steps on Host machine also and restart the sshd connection on h
 
 ************************
 
-Install Ansible :
+Install Ansible on *ansible-controller-machine* ONLY:
 
 Step 1:
 *************
@@ -99,6 +102,7 @@ Scroll down to end and add
 
 [webservers]
 paste private ip of host ==> 172.31.39.169
+ (may have to use the 'Private IP DNS name (IPv4 only)' instead)
 
 :wq!
 
@@ -122,15 +126,17 @@ ssh key will be generated
 
 Step 2: copy key on to the host
 
-	# ssh-copy-id -i ec2-user@private ip of host
+	# ssh-copy-id -i ec2-user@private ip of host  
+        (may have to use the 'Private IP DNS name (IPv4 only)' instead)  
 
 press yes
 enter passowrd ==>
 
 ssh connection will be done
-In the message we will have a command to loginto the host from ACM, execute it
+In the message we will have a command to log into the host from ACM, execute it
 
 	# ssh 'ec2-user@172.31.35.169'
+    (may have to use the 'Private IP DNS name (IPv4 only)' instead)
 
 we will be connected to the host
 
@@ -154,7 +160,7 @@ Module2 : command
 will give the uptime of hosts in webservers
 
 
-To chekc all modules in ansible
+To check all modules in ansible
 
 # ansible-doc -l
 
@@ -188,9 +194,9 @@ i
 
 Syntax check:
 
-# ansible-playbook playbook1.yml --syntax-check
+# ansible-playbook playbook2.yml --syntax-check
 
-# ansible-playbook playbook1.yml
+# ansible-playbook playbook2.yml
 
 ********************************************
 
@@ -218,6 +224,9 @@ i
 
 :wq!
 
+Create file:
+    /etc/ansible/index.html
+
 Check syntax
 
 	# ansible-playbook playbook.yml --syntax-check
@@ -228,7 +237,7 @@ Now run the playbook
 
 *************************************
 
-docker deplyment
+docker deployment
 
 ---
 - hosts: webservers
