@@ -9,12 +9,12 @@ spec:
  replicas: 3
  selector:
   matchLabels:
-   type: webserver
+   app: java
  template:
   metadata:
    name: mypod
    labels:
-    type: webserver
+    app: java
   spec:
    containers:
     - name: myn1
