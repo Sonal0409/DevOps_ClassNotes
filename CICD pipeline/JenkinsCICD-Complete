@@ -1,0 +1,38 @@
+pipeline{
+    tools{
+        maven 'mymaven'
+    }
+    agent any
+    stages{
+        stage('clone repo'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        stage('build the code'){
+            steps{
+                sh 'mvn clean install package'
+                
+            }
+        }
+        
+        stage('Build Image'){
+            steps{
+               sh 'docker build -t myimagejenkins .'
+            }
+        }
+        stage('Push image to dockerhub'){
+            steps{
+                sh 'docker tag myimagejenkins edu123/myimagejenkins:$BUILD_NUMBER'
+                sh 'docker login --username edu123 --password Edureka@123'
+                sh 'docker push edu123/myimagejenkins:$BUILD_NUMBER'
+            }
+        }
+        
+        stage('Deploy in kube'){
+            steps{
+                kubernetesDeploy configs: 'kubedeploy.yml', kubeConfig: [path: ''], kubeconfigId: 'kube_config', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
+            }
+        }
+    }
+}
